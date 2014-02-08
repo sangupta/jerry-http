@@ -68,8 +68,8 @@ import org.apache.http.protocol.HTTP;
  * {@link WebRawResponse}.
  * 
  * @author sangupta
+ * 
  * @since 0.3
- * @added 20 October 2012
  */
 public class WebRequest {
 

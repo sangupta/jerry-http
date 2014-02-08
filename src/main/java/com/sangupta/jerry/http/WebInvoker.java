@@ -50,6 +50,7 @@ import com.thoughtworks.xstream.XStream;
  * socket timeout happens.
  * 
  * @author sangupta
+ * 
  * @since 0.1.0
  * 
  */
@@ -78,21 +79,31 @@ public class WebInvoker {
 	private static final Logger logger = LoggerFactory.getLogger(WebInvoker.class);
 	
 	/**
-	 * Return the HTTP response body for a GET request to the given URL. In case an {@link IOException}
-	 * is thrown, it will be eaten up, logged at DEBUG level, and <code>null</code> returned.
+	 * Return the HTTP response body for a GET request to the given URL. In case
+	 * an {@link IOException} is thrown, it will be eaten up, logged at DEBUG
+	 * level, and <code>null</code> returned.
 	 * 
 	 * @param url
-	 * @return
+	 *            the url to hit
+	 *            
+	 * @return the string response body
 	 */
 	public static String fetchResponse(String url) {
 		return fetchResponse(url, CookiePolicy.BEST_MATCH);
 	}
 	
 	/**
+	 * Return the HTTP response body for a GET request to the given URL using
+	 * the given cookie policy. In case an {@link IOException} is thrown, it
+	 * will be eaten up, logged at DEBUG level, and <code>null</code> returned.
 	 * 
 	 * @param url
+	 *            the url to hit
+	 * 
 	 * @param cookiePolicy
-	 * @return
+	 *            the cookie policy to use
+	 * 
+	 * @return the string reponse body
 	 */
 	public static String fetchResponse(String url, String cookiePolicy) {
 		try {
@@ -105,19 +116,31 @@ public class WebInvoker {
 	}
 	
 	/**
+	 * Return the {@link WebResponse} for a GET request to the given URL using
+	 * the {@link CookiePolicy#BEST_MATCH} cookie policy . In case an
+	 * {@link IOException} is thrown, it will be eaten up, logged at DEBUG
+	 * level, and <code>null</code> returned.
 	 * 
 	 * @param url
-	 * @return
+	 *            the url to hit
+	 *            
+	 * @return the {@link WebResponse} obtained
 	 */
 	public static WebResponse getResponse(String url) {
 		return getResponse(url, CookiePolicy.BEST_MATCH);
 	}
 	
 	/**
-	 * Return the entire response for a GET request to the given URL.
-	 *  
+	 * Return the entire response for a GET request to the given URL using the
+	 * given cookie policy
+	 * 
 	 * @param url
-	 * @return
+	 *            the url to hit
+	 * 
+	 * @param cookiePolicy
+	 *            the cookie policy to use
+	 * 
+	 * @return the {@link WebResponse} obtained
 	 */
 	public static WebResponse getResponse(String url, String cookiePolicy) {
 		try {
@@ -131,20 +154,34 @@ public class WebInvoker {
 	
 	/**
 	 * Returns the HTTP headers etc by making a HEAD request to the given URL as
-	 * a {@link Map}.
+	 * a {@link Map}. A cookie policy of {@link CookiePolicy#BEST_MATCH} is used.
 	 * 
 	 * @param url
+	 *            the url to hit
+	 * 
+	 * @param followRedirects
+	 *            whether redirects should be followed or not
+	 * 
+	 * @return a map of all header values
 	 */
 	public static Map<String, String> getHeaders(String url, boolean followRedirects) {
 		return getHeaders(url, followRedirects, CookiePolicy.BEST_MATCH);
 	}
 	
 	/**
+	 * Return the HTTP headers by making a HEAD request to the given URL using
+	 * the given cookie policy
 	 * 
 	 * @param url
+	 *            the url to hit
+	 * 
 	 * @param followRedirects
+	 *            whether redirects should be followed or not
+	 * 
 	 * @param cookiePolicy
-	 * @return
+	 *            the cookie policy to use
+	 * 
+	 * @return a map of all header values
 	 */
 	public static Map<String, String> getHeaders(String url, boolean followRedirects, String cookiePolicy) {
 		try {
@@ -161,22 +198,35 @@ public class WebInvoker {
 	}
 	
 	/**
-	 * Make a HEAD request to the URL and return the web response.
+	 * Make a HEAD request to the URL and return the web response. A cookie
+	 * policy of {@link CookiePolicy#BEST_MATCH} is used.
 	 * 
 	 * @param url
+	 *            the url to hit
+	 * 
 	 * @param followRedirects
-	 * @return
+	 *            whether to follow redirects or not
+	 * 
+	 * @return the {@link WebResponse} obtained
 	 */
 	public static WebResponse headRequest(String url, boolean followRedirects) {
 		return headRequest(url, followRedirects, CookiePolicy.BEST_MATCH);
 	}
 	
 	/**
+	 * Make a HEAD request to the URL using given cookie policy and return the
+	 * web response.
 	 * 
 	 * @param url
+	 *            the url to hit
+	 * 
 	 * @param followRedirects
+	 *            whether to follow redirects or not
+	 * 
 	 * @param cookiePolicy
-	 * @return
+	 *            the cookie policy to use
+	 * 
+	 * @return the {@link WebResponse} obtained
 	 */
 	public static WebResponse headRequest(String url, boolean followRedirects, String cookiePolicy) {
 		try {
@@ -193,11 +243,16 @@ public class WebInvoker {
 	}
 	
 	/**
-	 * Invoke the given URL by the specified method and return the entire HTTP response.
+	 * Invoke the given URL by the specified HTTP verb/method and return the
+	 * entire HTTP response.
 	 * 
 	 * @param uri
+	 *            the url to hit
+	 * 
 	 * @param method
-	 * @return
+	 *            the VERB to use
+	 * 
+	 * @return the {@link WebResponse} obtained
 	 */
 	public static WebResponse invokeUrl(final String uri, final WebRequestMethod method) {
 		WebRequest request = getWebRequest(uri, method);
@@ -212,14 +267,23 @@ public class WebInvoker {
 	}
 	
 	/**
-	 * Invoke the given URL by the specified method, supplying the header and params as specified and return
-	 * the entire HTTP response.
+	 * Invoke the given URL by the specified method, supplying the header and
+	 * params as specified and return the entire HTTP response.
 	 * 
 	 * @param uri
+	 *            the url to hit
+	 * 
 	 * @param method
+	 *            the VERB to use
+	 * 
 	 * @param headers
+	 *            the request headers to be sent
+	 * 
 	 * @param params
-	 * @return
+	 *            the FORM parameters to be sent
+	 * 
+	 * @return the {@link WebResponse} obtained
+	 * 
 	 */
 	public static WebResponse invokeUrl(final String uri, final WebRequestMethod method, final Map<String, String> headers, final Map<String, String> params) {
 		WebRequest request = getWebRequest(uri, method);
@@ -244,12 +308,21 @@ public class WebInvoker {
 	}
 	
 	/**
+	 * Hit the URL with given parameters and return the http response.
 	 * 
 	 * @param uri
+	 *            the url to hit
+	 * 
 	 * @param method
+	 *            the VERB to use
+	 * 
 	 * @param requestContentType
+	 *            the content type of the request body
+	 * 
 	 * @param requestBody
-	 * @return
+	 *            the request body string
+	 * 
+	 * @return the {@link WebResponse} obtained
 	 */
 	public static WebResponse invokeUrl(final String uri, final WebRequestMethod method, final String requestContentType, final String requestBody) {
 		WebRequest request = getWebRequest(uri, method);
@@ -266,12 +339,17 @@ public class WebInvoker {
 	}
 	
 	/**
-	 * POST the XML representation of the given object, to the given URL. The object
-	 * is converted to XML format using {@link XStream} project.
+	 * POST the XML representation of the given object, to the given URL. The
+	 * object is converted to XML format using {@link XStream} project.
 	 * 
 	 * @param uri
+	 *            the url to hit
+	 * 
 	 * @param object
-	 * @return
+	 *            the object to be sent in request body
+	 * 
+	 * @return the {@link WebResponse} obtained
+	 * 
 	 */
 	public static WebResponse postXML(final String uri, final Object object) {
 		WebRequest request = getWebRequest(uri, WebRequestMethod.POST);
@@ -289,12 +367,16 @@ public class WebInvoker {
 	}
 	
 	/**
-	 * POST the JSON representation of the given object to the given URL. The object
-	 * is converted to JSON format usign {@link Gson} project.
+	 * POST the JSON representation of the given object to the given URL. The
+	 * object is converted to JSON format usign {@link Gson} project.
 	 * 
 	 * @param uri
+	 *            the url to hit
+	 * 
 	 * @param object
-	 * @return
+	 *            the object to be sent in request body
+	 * 
+	 * @return the {@link WebResponse} obtained
 	 */
 	public static WebResponse postJSON(final String uri, final Object object) {
 		WebRequest request = getWebRequest(uri, WebRequestMethod.POST);
@@ -312,11 +394,15 @@ public class WebInvoker {
 	}
 	
 	/**
-	 * Get the {@link WebRequest} object for the given method.
+	 * Get the {@link WebRequest} object for the given VERB method.
 	 * 
 	 * @param uri
+	 *            the url to hit
+	 * 
 	 * @param method
-	 * @return
+	 *            the HTTP VERB to be used
+	 * 
+	 * @return the {@link WebRequest} instance for the request
 	 */
 	public static WebRequest getWebRequest(final String uri, final WebRequestMethod method) {
 		if(method == null) {
@@ -366,6 +452,7 @@ public class WebInvoker {
 	 * Change the default value of the connection timeout.
 	 * 
 	 * @param millis
+	 *            the timeout in millis
 	 */
 	public static void setConnectionTimeout(int millis) {
 		CONNECTION_TIMEOUT = millis;
@@ -375,15 +462,22 @@ public class WebInvoker {
 	 * Change the default value of the socket timeout.
 	 * 
 	 * @param millis
+	 *            the timeout in millis
 	 */
 	public static void setSocketTimeout(int millis) {
 		SOCKET_TIMEOUT = millis;
 	}
 	
 	/**
-	 * Execute the given webrequest silently.
+	 * Execute the given {@link WebRequest} silently.
 	 * 
-	 *
+	 * @param request
+	 *            the {@link WebRequest} to be executed
+	 * 
+	 * @return {@link WebResponse} obtained
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the {@link WebRequest} is <code>null</code>
 	 */
 	public static WebResponse executeSilently(WebRequest request) {
 		if(request == null) {
@@ -400,10 +494,13 @@ public class WebInvoker {
 	}
 	
 	/**
-	 * Create a {@link NameValuePair} list from the given {@link Map} of params to be passed.
+	 * Create a {@link NameValuePair} list from the given {@link Map} of params
+	 * to be passed.
 	 * 
 	 * @param params
-	 * @return
+	 *            the params to convert to
+	 * 
+	 * @return a list of {@link NameValuePair}s generated
 	 */
 	private static List<NameValuePair> getFormParams(Map<String, String> params) {
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();

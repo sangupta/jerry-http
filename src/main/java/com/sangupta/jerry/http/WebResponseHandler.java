@@ -41,8 +41,8 @@ import com.sangupta.jerry.util.AssertUtils;
  * from the provided {@link HttpResponse} object.
  * 
  * @author sangupta
+ * 
  * @since 0.3
- * @added 20 October 2012
  */
 public class WebResponseHandler implements ResponseHandler<WebResponse> {
 

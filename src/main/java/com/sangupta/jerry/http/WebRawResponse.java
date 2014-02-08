@@ -43,8 +43,8 @@ import org.apache.http.util.EntityUtils;
  * final {@link WebResponse} object.
  * 
  * @author sangupta
+ * 
  * @since 0.3
- * @added 20 October 2012
  */
 public class WebRawResponse {
 

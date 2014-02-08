@@ -26,8 +26,8 @@ package com.sangupta.jerry.http;
  * the host, which has a prescribed rate limit.
  * 
  * @author sangupta
+ * 
  * @since 0.3
- * @added 20 October 2012
  */
 public class HttpRateLimitException extends RuntimeException {
 

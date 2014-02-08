@@ -32,9 +32,8 @@ public interface WebInvocationInterceptor {
 
 	/**
 	 * Intercepting method that is invoked before each request of
-	 * {@link WebInvoker#invokeUrl(String, WebRequestMethod, java.util.Map, java.util.Map, String, String)}
-	 * thus providing a way to add hooks to modify the request originating from
-	 * somewhere else.
+	 * {@link WebInvoker} is made thus providing a way to add hooks to modify
+	 * the request originating from somewhere else.
 	 * 
 	 * The URL provided here contains all query parameters that might have been
 	 * added. In case of POST requests the query parameters are not added.
@@ -63,9 +62,8 @@ public interface WebInvocationInterceptor {
 	
 	/**
 	 * Intercepting method that is invoked after each request of
-	 * {@link WebInvoker#invokeUrl(String, WebRequestMethod, java.util.Map, java.util.Map, String, String)}
-	 * thus providing a way to add hooks to update the response received from
-	 * the server.
+	 * {@link WebInvoker} thus providing a way to add hooks to update the
+	 * response received from the server.
 	 * 
 	 * This may be needed in scenarios like mock testing.
 	 * 

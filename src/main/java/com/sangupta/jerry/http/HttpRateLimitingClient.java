@@ -44,8 +44,8 @@ import org.apache.http.protocol.HttpContext;
  * implementation which does the magic of all executing all calls.
  * 
  * @author sangupta
+ * 
  * @since 0.3
- * @added 20 October 2012
  */
 public class HttpRateLimitingClient implements HttpClient {
 	
@@ -77,7 +77,7 @@ public class HttpRateLimitingClient implements HttpClient {
 	/**
 	 * Return the actual client being used by this wrapper.
 	 * 
-	 * @return
+	 * @return the actual {@link HttpClient} being used
 	 */
 	public HttpClient getActualClient() {
 		return this.actualClient;

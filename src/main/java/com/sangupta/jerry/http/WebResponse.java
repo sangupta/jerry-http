@@ -40,6 +40,8 @@ import org.apache.http.HttpHeaders;
  * Class that encapsulates the response information obtained from invoking a HTTP URL. 
  * 
  * @author sangupta
+ * 
+ * @since 0.9.0
  */
 public class WebResponse implements Serializable, Closeable {
 	
@@ -108,11 +110,15 @@ public class WebResponse implements Serializable, Closeable {
     }
     
     /**
-     * Returns the fetched response as a {@link String} parsed using the
-     * response {@link Charset} or the provided {@link Charset} if none is specified.
-     * 
-     * @return
-     */
+	 * Returns the fetched response as a {@link String} parsed using the
+	 * response {@link Charset} or the provided {@link Charset} if none is
+	 * specified.
+	 * 
+	 * @param charset
+	 *            the {@link Charset} to be used for deconding the response
+	 * 
+	 * @return the string representation of the string
+	 */
     public String asString(Charset charset) {
     	if(this.bytes != null) {
             try {
@@ -134,7 +140,7 @@ public class WebResponse implements Serializable, Closeable {
     /**
      * Returns the fetched response as an {@link InputStream}.
      * 
-     * @return
+     * @return the {@link InputStream} of the response
      */
     public InputStream asStream() {
     	if(this.bytes != null) {
@@ -148,17 +154,19 @@ public class WebResponse implements Serializable, Closeable {
      * Return the fetched response as a byte-array. The returned byte-array is
      * a clone of the response array.
      * 
-     * @return
+     * @return the byte array representation of the response
      */
     public byte[] asBytes() {
     	return this.bytes.clone();
     }
     
     /**
-     * Return the last modified date as a long value
-     * 
-     * @return
-     */
+	 * Return the last modified date as a long value
+	 * 
+	 * @return the millis timestamp representing the last modified header, or
+	 *         <code>-1</code> if the header is not present or cannot be parsed
+	 *         successfully
+	 */
     public long getLastModified() {
     	String headerValue = getHeader(HttpHeaders.LAST_MODIFIED);
     	if(headerValue != null) {
@@ -173,11 +181,11 @@ public class WebResponse implements Serializable, Closeable {
     }
     
     /**
-     * Check if the request returned a successful response. All response codes between HTTP 200
-     * and HTTP 299 are considered to be successful.
-     * 
-     * @return
-     */
+	 * Check if the request returned a successful response. All response codes
+	 * between HTTP 200 and HTTP 299 are considered to be successful.
+	 * 
+	 * @return <code>true</code> for success, <code>false</code> otherwise
+	 */
     public boolean isSuccess() {
     	if(this.responseCode >= 200 && this.responseCode <= 299) {
     		return true;
@@ -190,7 +198,7 @@ public class WebResponse implements Serializable, Closeable {
      * Check if the response indicates a redirected request. All response codes between HTTP 300
      * and HTTP 399 are considered to be a redirect.
      * 
-     * @return
+     * @return <code>true</code> if redirect response, <code>false</code> otherwise
      */
     public boolean isRedirect() {
     	if(this.responseCode >= 300 && this.responseCode <= 399) {
@@ -201,11 +209,12 @@ public class WebResponse implements Serializable, Closeable {
     }
     
     /**
-     * Check if the response indicates an erroneous client request. All response codes between HTTP 400
-     * and HTTP 499 are considered to be a client error.
-     * 
-     * @return
-     */
+	 * Check if the response indicates an erroneous client request. All response
+	 * codes between HTTP 400 and HTTP 499 are considered to be a client error.
+	 * 
+	 * @return <code>true</code> if client error is indicated,
+	 *         <code>false</code> otherwise
+	 */
     public boolean isClientError() {
     	if(this.responseCode >= 400 && this.responseCode <= 499) {
     		return true;
@@ -215,11 +224,12 @@ public class WebResponse implements Serializable, Closeable {
     }
     
     /**
-     * Check if the response indicates an error on the server. All response codes between HTTP 500
-     * and HTTP 599 are considered to be a server error.
-     * 
-     * @return
-     */
+	 * Check if the response indicates an error on the server. All response
+	 * codes between HTTP 500 and HTTP 599 are considered to be a server error.
+	 * 
+	 * @return <code>true</code> if server error is indicated,
+	 *         <code>false</code> otherwise
+	 */
     public boolean isServerError() {
     	if(this.responseCode >= 500 && this.responseCode <= 599) {
     		return true;
@@ -229,11 +239,14 @@ public class WebResponse implements Serializable, Closeable {
     }
     
     /**
-     * Return the value of the header if present, or <code>null</code>
-     * 
-     * @param headerName
-     * @return
-     */
+	 * Return the value of the header if present, or <code>null</code>
+	 * 
+	 * @param headerName
+	 *            the name of the header
+	 * 
+	 * @return the value of the header, or <code>null</code> if header is not
+	 *         present
+	 */
     private String getHeader(String headerName) {
     	if(headers == null) {
     		return null;
@@ -251,12 +264,12 @@ public class WebResponse implements Serializable, Closeable {
     }
     
     /**
-     * Utility function that returns a string representation of this response
-     * which can be used for debugging purposes. Should not be used in production
-     * code as is slow.
-     * 
-     * @return
-     */
+	 * Utility function that returns a string representation of this response
+	 * which can be used for debugging purposes. Should not be used in
+	 * production code as is slow.
+	 * 
+	 * @return debug trace information represented as string
+	 */
     public String trace() {
     	StringBuilder builder = new StringBuilder();
     	
