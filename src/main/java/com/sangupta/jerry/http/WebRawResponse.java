@@ -105,13 +105,20 @@ public class WebRawResponse {
     }
 
     /**
-     * Handle the response using the given response handler.
-     * 
-     * @param handler
-     * @return
-     * @throws ClientProtocolException
-     * @throws IOException
-     */
+	 * Handle the response using the given response handler.
+	 * 
+	 * @param handler
+	 *            the handler to use
+	 * 
+	 * @return the handled response return
+	 * 
+	 * @throws ClientProtocolException
+	 *             if something fails
+	 * 
+	 * @throws IOException
+	 *             if something fails
+	 * 
+	 */
     public <T> T handleResponse(final ResponseHandler<T> handler) throws ClientProtocolException, IOException {
         assertNotConsumed();
         try {
@@ -122,23 +129,30 @@ public class WebRawResponse {
     }
 
     /**
-     * Convert the response to a {@link WebResponse} object. The method will never return a <code>null</code>.
-     * 
-     * @return
-     * @throws ClientProtocolException
-     * @throws IOException
-     */
+	 * Convert the response to a {@link WebResponse} object. The method will
+	 * never return a <code>null</code>.
+	 * 
+	 * @return the {@link WebResponse} object
+	 * 
+	 * @throws ClientProtocolException
+	 *             if something fails
+	 * 
+	 * @throws IOException
+	 *             if something fails
+	 */
     public WebResponse webResponse() throws ClientProtocolException, IOException {
         return handleResponse(new WebResponseHandler());
     }
 
     /**
-     * Return the {@link HttpResponse} object by reading the entire response
-     * stream as byte-array.
-     * 
-     * @return
-     * @throws IOException
-     */
+	 * Return the {@link HttpResponse} object by reading the entire response
+	 * stream as byte-array.
+	 * 
+	 * @return the {@link HttpResponse} object
+	 * 
+	 * @throws IOException
+	 *             if something fails
+	 */
     public HttpResponse httpResponse() throws IOException {
         assertNotConsumed();
         try {

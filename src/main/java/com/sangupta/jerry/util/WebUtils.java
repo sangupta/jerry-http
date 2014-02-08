@@ -31,23 +31,32 @@ import org.slf4j.LoggerFactory;
 import com.sangupta.jerry.http.WebRequest;
 
 /**
+ * Function to handle file downloads from the web via HTTP. More schemes
+ * may be added in future.
+ * 
  * @author sangupta
  *
  */
 public class WebUtils {
 	
+	/**
+	 * My logger instance
+	 */
 	private static final Logger logger = LoggerFactory.getLogger(WebUtils.class);
 	
 	/**
-	 * Download the file at the given location URL and store it as a temporary file on disk.
-	 * The temporary file is set to be deleted at the exit of the application.
+	 * Download the file at the given location URL and store it as a temporary
+	 * file on disk. The temporary file is set to be deleted at the exit of the
+	 * application.
 	 * 
-	 * @param url absolute URL of the file
+	 * @param url
+	 *            absolute URL of the file
 	 * 
-	 * @return {@link File} handle of the temporary file that was written to disk if successful,
-	 * <code>null</code> otherwise.
+	 * @return {@link File} handle of the temporary file that was written to
+	 *         disk if successful, <code>null</code> otherwise.
 	 * 
-	 * @throws IOException in case something fails
+	 * @throws IOException
+	 *             in case something fails
 	 */
 	public static File downloadToTempFile(String url) throws IOException {
 		String extension = UriUtils.extractExtension(url);
@@ -69,16 +78,20 @@ public class WebUtils {
 	}
 	
 	/**
-	 * Download the file at the given location URL and store it in the file mentioned on disk.
-	 * If the file exists, it will be over-written. 
+	 * Download the file at the given location URL and store it in the file
+	 * mentioned on disk. If the file exists, it will be over-written.
 	 * 
-	 * @param url absolute URL of the file
+	 * @param url
+	 *            absolute URL of the file
 	 * 
-	 * @param fileToDownloadIn {@link File} in which contents are written
+	 * @param fileToDownloadIn
+	 *            {@link File} in which contents are written
 	 * 
-	 * @return <code>true</code> if file was successfully downloaded, <code>false</code> otherwise.
+	 * @return <code>true</code> if file was successfully downloaded,
+	 *         <code>false</code> otherwise.
 	 * 
-	 * @throws IOException in case something fails
+	 * @throws IOException
+	 *             in case something fails
 	 */
 	public static boolean downloadToFile(String url, File fileToDownloadIn) throws IOException {
 		try {

@@ -57,10 +57,14 @@ import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
+import com.sangupta.jerry.util.AssertUtils;
+
 /**
+ * Global static HTTP executor that configures and maintains the Apache
+ * HTTP client connection managers and all to work with HTTP requests.
+ * 
  * @author sangupta
  * @since 0.3
- * @added 20 October 2012
  */
 public class HttpExecutor {
 
@@ -139,86 +143,150 @@ public class HttpExecutor {
 	public static final HttpExecutor DEFAULT = new HttpExecutor(HTTP_CLIENT);
 	
 	/**
-	 * Return the underlying {@link HttpClient} instance that can be used
-	 * to make web requests. All requests shot using this client honor
+	 * Return the underlying {@link HttpClient} instance that can be used to
+	 * make web requests. All requests shot using this client honor
 	 * rate-limiting.
 	 * 
-	 * @return
+	 * @return the enclosed {@link HttpClient} instance
 	 */
 	public static final HttpClient getHttpClient() {
 		return HTTP_CLIENT;
 	}
 	
 	/**
-	 * Get a new {@link HttpExecutor} instance based on default client
+	 * Get a new {@link HttpExecutor} instance based on the underlying
+	 * {@link HttpClient}.
 	 * 
-	 * @return
+	 * @return a new {@link HttpExecutor} instance
 	 */
 	public static final HttpExecutor newInstance() {
 		return new HttpExecutor(HTTP_CLIENT);
 	}
 	
 	/**
-	 * Get a new {@link HttpExecutor} instance based on given client
+	 * Get a new {@link HttpExecutor} instance based on given {@link HttpClient}
+	 * instance
 	 * 
 	 * @param client
-	 * @return
+	 *            the {@link HttpClient} to use
+	 * 
+	 * @return a new {@link HttpExecutor} instance
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the given {@link HttpClient} is <code>null</code>
 	 */
 	public static final HttpExecutor newInstance(HttpClient client) {
+		if(client == null) {
+			throw new IllegalArgumentException("HttpClient instance cannot be null");
+		}
+		
 		return new HttpExecutor(client);
 	}
 	
 	/**
-	 * Set overall maximum connections that can be handled by the underlying connection manager.
+	 * Set overall maximum connections that can be handled by the underlying
+	 * connection manager.
 	 * 
 	 * @param numConnections
+	 *            the number of connections to set
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the number of connections is less than <code>1</code>
 	 */
 	public static void setMaxConnections(int numConnections) {
+		if(numConnections < 1) {
+			throw new IllegalArgumentException("Number of connections cannot be less than 1");
+		}
+		
 		HTTP_CONNECTION_MANAGER.setMaxTotal(numConnections);
 	}
 	
 	/**
-	 * Set overall maximum connections per route (over all hosts) that can be handled by the underlying connection
-	 * manager.
+	 * Set overall maximum connections per route (over all hosts) that can be
+	 * handled by the underlying connection manager.
 	 * 
 	 * @param numConnections
+	 *            the number of connections to set
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the number of connections is less than <code>1</code>
 	 */
 	public static void setMaxConnectionsPerRoute(int numConnections) {
+		if(numConnections < 1) {
+			throw new IllegalArgumentException("Number of connections cannot be less than 1");
+		}
+		
 		HTTP_CONNECTION_MANAGER.setDefaultMaxPerRoute(numConnections);
 	}
 	
 	/**
-	 * Set maximum connections that will be operated over the given route, that will be handled by the underlying
-	 * connection manager.
+	 * Set maximum connections that will be operated over the given route, that
+	 * will be handled by the underlying connection manager.
 	 * 
-	 * @param route
-	 * @param numConnections
+	 * @param route the {@link HttpRoute} on which to set maximum connections
+	 * 
+	 * @param numConnections the number of connections to set
+
+	 * @throws IllegalArgumentException
+	 *             if the number of connections is less than <code>ZERO</code>
 	 */
 	public static void setMaxConnectionsOnHost(HttpRoute route, int numConnections) {
+		if(numConnections < 0) {
+			throw new IllegalArgumentException("Number of connections cannot be less than 1");
+		}
+		
 		HTTP_CONNECTION_MANAGER.setMaxPerRoute(route, numConnections);
 	}
 	
 	/**
-	 * Set maximum connections that will be operated over the given host on port 80, that will be handled by the underlying
-	 * connection manager.
+	 * Set maximum connections that will be operated over the given host on port
+	 * 80, that will be handled by the underlying connection manager.
 	 * 
 	 * @param hostName
+	 *            the host name for which the limit needs to be set
+	 * 
 	 * @param numConnections
+	 *            the number of connections to set
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the number of connections is less than <code>ZERO</code>
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the host name is <code>null</code> or empty.
 	 */
 	public static void setMaxConnectionsOnHost(String hostName, int numConnections) {
+		if(AssertUtils.isEmpty(hostName)) {
+			throw new IllegalArgumentException("Hostname cannot be null/empty");
+		}
+		
 		HttpRoute route = new HttpRoute(new HttpHost(hostName));
 		setMaxConnectionsOnHost(route, numConnections);
 	}
 	
 	/**
-	 * Set maximum connections that will be operated over the given host on given port, that will be handled by the underlying
-	 * connection manager.
+	 * Set maximum connections that will be operated over the given host on
+	 * given port, that will be handled by the underlying connection manager.
 	 * 
 	 * @param hostName
+	 *            the host name for which the limit needs to be set
+	 *            
 	 * @param port
+	 *            the port on which the limit needs to be set
+	 * 
 	 * @param numConnections
+	 *            the number of connections to set
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the number of connections is less than <code>ZERO</code>
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the host name is <code>null</code> or empty.
 	 */
 	public static void setMaxConnectionsOnHost(String hostName, int port, int numConnections) {
+		if(AssertUtils.isEmpty(hostName)) {
+			throw new IllegalArgumentException("Hostname cannot be null/empty");
+		}
+		
 		HttpRoute route = new HttpRoute(new HttpHost(hostName, port));
 		setMaxConnectionsOnHost(route, numConnections);
 	}
@@ -257,10 +325,18 @@ public class HttpExecutor {
 	}
 	
 	/**
+	 * Execute the given web request and return the obtained raw web response.
+	 * 
 	 * @param webRequest
-	 * @return
-	 * @throws IOException 
-	 * @throws ClientProtocolException 
+	 *            the {@link WebRequest} to be executed
+	 * 
+	 * @return the {@link WebRawResponse} obtained after execution
+	 * 
+	 * @throws IOException
+	 *             if something fails
+	 * 
+	 * @throws ClientProtocolException
+	 *             if something fails
 	 */
 	public WebRawResponse execute(WebRequest webRequest) throws ClientProtocolException, IOException {
 		// sharing the context may lead to circular redirects in case
@@ -302,6 +378,7 @@ public class HttpExecutor {
 	 * Remove any previous rate limiting that has been set for the host.
 	 * 
 	 * @param hostName
+	 *            the host name for which we need to remove rate limiting
 	 */
 	public HttpExecutor removeRateLimiting(String hostName) {
 		if(this.client instanceof HttpRateLimitingClient) {
@@ -315,7 +392,7 @@ public class HttpExecutor {
 	/**
 	 * Remove all previously set rate limiting.
 	 * 
-	 * @return
+	 * @return this very {@link HttpExecutor}
 	 */
 	public HttpExecutor removeAllRateLimiting() {
 		if(this.client instanceof HttpRateLimitingClient) {
@@ -332,8 +409,12 @@ public class HttpExecutor {
 	 * Add provided authentication
 	 * 
 	 * @param authScope
+	 *            the {@link AuthScope} that needs to be set
+	 * 
 	 * @param credentials
-	 * @return
+	 *            the {@link Credentials} that need to be set
+	 * 
+	 * @return this very {@link HttpExecutor}
 	 */
 	public HttpExecutor addAuthentication(AuthScope authScope, Credentials credentials) {
 		if (this.credentialsProvider == null) {
@@ -346,7 +427,7 @@ public class HttpExecutor {
 	/**
 	 * Clear all authentication that may have been set.
 	 * 
-	 * @return
+	 * @return this very {@link HttpExecutor}
 	 */
 	public HttpExecutor clearAllAuthentication() {
         if (this.credentialsProvider != null) {
@@ -360,8 +441,15 @@ public class HttpExecutor {
 	 * Add authentication for a given host
 	 * 
 	 * @param host
+	 *            the host name for which authentication needs to be set
+	 *            
 	 * @param userName
+	 *            the username that needs to be set
+	 * 
 	 * @param password
+	 *            the password that needs to be set
+	 * 
+	 * @return this very {@link HttpExecutor}
 	 */
 	public HttpExecutor addAuthentication(String host, String userName, String password) {
 		AuthScope authScope = new AuthScope(host, 80);
@@ -370,12 +458,21 @@ public class HttpExecutor {
 	}
 	
 	/**
+	 * Add authentication for given host and port.
 	 * 
 	 * @param host
+	 *            the host name for which authentication needs to be set
+	 * 
 	 * @param port
+	 *            the port for which authentication needs to be set
+	 * 
 	 * @param userName
+	 *            the username that needs to be set
+	 * 
 	 * @param password
-	 * @return
+	 *            the password that needs to be set
+	 * 
+	 * @return this very {@link HttpExecutor}
 	 */
 	public HttpExecutor addAuthentication(String host, int port, String userName, String password) {
 		AuthScope authScope = new AuthScope(host, port);
@@ -384,9 +481,12 @@ public class HttpExecutor {
 	}
 
 	/**
+	 * Remove authentication for given host.
 	 * 
-	 * @param host
-	 * @return
+	 * @param host the hostname for which authentication needs to be removed
+	 * 
+	 * @return this very {@link HttpExecutor}
+	 * 
 	 */
 	public HttpExecutor removeAuthentication(String host) {
 		AuthScope authScope = new AuthScope(host, 80);
@@ -394,10 +494,15 @@ public class HttpExecutor {
 	}
 	
 	/**
+	 * Remove authentication for given host and port.
 	 * 
 	 * @param host
+	 *            the hostname
+	 * 
 	 * @param port
-	 * @return
+	 *            the port number
+	 * 
+	 * @return this very {@link HttpExecutor}
 	 */
 	public HttpExecutor removeAuthentication(String host, int port) {
 		AuthScope authScope = new AuthScope(host, port);
@@ -407,10 +512,13 @@ public class HttpExecutor {
 	// Methods related to cookie store
 	
 	/**
-	 * Replace or set the given cookie store as the cookie store instance to be used.
+	 * Replace or set the given cookie store as the cookie store instance to be
+	 * used.
 	 * 
 	 * @param cookieStore
-	 * @return
+	 *            the cookie store that needs to be set
+	 * 
+	 * @return this very {@link HttpExecutor}
 	 */
     public HttpExecutor setCookieStore(final CookieStore cookieStore) {
         this.cookieStore = cookieStore;
@@ -418,10 +526,10 @@ public class HttpExecutor {
     }
 
     /**
-     * Clear all cookies in the cookie store if any present.
-     * 
-     * @return
-     */
+	 * Clear all cookies in the cookie store if any present.
+	 * 
+	 * @return this very {@link HttpExecutor}
+	 */
     public HttpExecutor clearCookies() {
         if (this.cookieStore != null) {
             this.cookieStore.clear();

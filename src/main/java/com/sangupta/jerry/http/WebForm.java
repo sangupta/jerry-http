@@ -54,7 +54,7 @@ public class WebForm {
 	/**
 	 * Utility function to create a new instance.
 	 * 
-	 * @return
+	 * @return a new instance of {@link WebForm}
 	 */
 	public static WebForm newForm() {
 		return new WebForm();
@@ -64,8 +64,12 @@ public class WebForm {
 	 * Add a new parameter and value to this form.
 	 * 
 	 * @param name
+	 *            the param name
+	 * 
 	 * @param value
-	 * @return
+	 *            the param value
+	 * 
+	 * @return this very {@link WebForm}
 	 */
 	public WebForm addParam(final String name, final String value) {
 		this.params.add(new BasicNameValuePair(name, value));
@@ -77,7 +81,9 @@ public class WebForm {
 	 * <code>null</code> being passed as input parameter object.
 	 * 
 	 * @param params
-	 * @return
+	 *            the params to add
+	 * 
+	 * @return this very {@link WebForm}
 	 */
 	public WebForm addParams(Map<String, String> params) {
 		if(params == null) {
@@ -92,9 +98,9 @@ public class WebForm {
 	}
 	
 	/**
-	 * Return all the params back
+	 * Return all the params back.
 	 * 
-	 * @return
+	 * @return a list of all params as {@link NameValuePair}
 	 */
 	public List<NameValuePair> build() {
 		return Collections.unmodifiableList(this.params);

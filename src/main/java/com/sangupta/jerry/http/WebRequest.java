@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -72,133 +73,184 @@ import org.apache.http.protocol.HTTP;
  */
 public class WebRequest {
 
+	/**
+	 * The date format to use
+	 */
 	public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
     
+	/**
+	 * The date local for US timezone
+	 */
 	public static final Locale DATE_LOCALE = Locale.US;
     
+	/**
+	 * The GMT timezone
+	 */
 	public static final TimeZone TIME_ZONE = TimeZone.getTimeZone("GMT");
 
 	/**
+	 * Create a HTTP GET based {@link WebRequest} for the given {@link URI}
 	 * 
 	 * @param uri
-	 * @return
+	 *            the {@link URI} for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
 	 */
     public static WebRequest get(final URI uri) {
         return new WebRequest(new HttpGet(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP GET based {@link WebRequest} for the given string uri
+	 * 
+	 * @param uri
+	 *            the string uri for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest get(final String uri) {
         return new WebRequest(new HttpGet(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP HEAD based {@link WebRequest} for the given {@link URI}
+	 * 
+	 * @param uri
+	 *            the {@link URI} for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest head(final URI uri) {
         return new WebRequest(new HttpHead(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP HEAD based {@link WebRequest} for the given string uri.
+	 * 
+	 * @param uri
+	 *            the string uri for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest head(final String uri) {
         return new WebRequest(new HttpHead(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP POST based {@link WebRequest} for the given {@link URI}
+	 * 
+	 * @param uri
+	 *            the {@link URI} for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest post(final URI uri) {
         return new WebRequest(new HttpPost(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP POST based {@link WebRequest} for the given string uri.
+	 * 
+	 * @param uri
+	 *            the string uri for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest post(final String uri) {
         return new WebRequest(new HttpPost(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP PUT based {@link WebRequest} for the given {@link URI}
+	 * 
+	 * @param uri
+	 *            the {@link URI} for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest put(final URI uri) {
         return new WebRequest(new HttpPut(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP PUT based {@link WebRequest} for the given string URI.
+	 * 
+	 * @param uri
+	 *            the string uri for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest put(final String uri) {
         return new WebRequest(new HttpPut(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP TRACE based {@link WebRequest} for the given {@link URI}
+	 * 
+	 * @param uri
+	 *            the {@link URI} for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest trace(final URI uri) {
         return new WebRequest(new HttpTrace(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP TRACE based {@link WebRequest} for the given string URI
+	 * 
+	 * @param uri
+	 *            the string URI for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest trace(final String uri) {
         return new WebRequest(new HttpTrace(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP DELETE based {@link WebRequest} for the given {@link URI}
+	 * 
+	 * @param uri
+	 *            the {@link URI} for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest delete(final URI uri) {
         return new WebRequest(new HttpDelete(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP DELETE based {@link WebRequest} for the given string URI
+	 * 
+	 * @param uri
+	 *            the string URI for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest delete(final String uri) {
         return new WebRequest(new HttpDelete(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+	 * Create a HTTP OPTIONS based {@link WebRequest} for the given {@link URI}
+	 * 
+	 * @param uri
+	 *            the {@link URI} for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest options(final URI uri) {
         return new WebRequest(new HttpOptions(uri));
     }
 
     /**
-     * 
-     * @param uri
-     * @return
+     * Create a HTTP OPTIONS based {@link WebRequest} for the given string URI.
+	 * 
+	 * @param uri
+	 *            the string URI for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
      */
     public static WebRequest options(final String uri) {
         return new WebRequest(new HttpOptions(uri));
@@ -207,25 +259,28 @@ public class WebRequest {
     // Instance methods start here
     
     /**
-     * 
+     * The associated {@link HttpRequestBase}
      */
     private final HttpRequestBase request;
 
     /**
-     * 
+     * The associated {@link HttpParams}
      */
     private final HttpParams localParams;
 
     /**
-     * 
+     * The associated {@link DateFormat} formatter
      */
     private SimpleDateFormat dateFormatter;
 
     /**
-     * Create the {@link WebRequest} object using the given {@link HttpRequestBase} object.
-     * 
-     * @param request
-     */
+	 * Create the {@link WebRequest} object using the given
+	 * {@link HttpRequestBase} object.
+	 * 
+	 * @param request
+	 *            the base http request
+	 * 
+	 */
     WebRequest(final HttpRequestBase request) {
         super();
         this.request = request;
@@ -235,17 +290,17 @@ public class WebRequest {
     /**
      * Get the underlying {@link HttpRequestBase} object.
      * 
-     * @return
+     * @return the base http request
      */
     HttpRequestBase getHttpRequest() {
         return this.request;
     }
     
     /**
-     * Display the debug information for this request
-     * 
-     * @return
-     */
+	 * Display the debug information for this request
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest trace() {
     	System.out.println(this.request.getRequestLine());
     	Header[] headers = this.request.getAllHeaders();
@@ -277,7 +332,7 @@ public class WebRequest {
     /**
      * Return the HTTP VERB associated with this request.
      * 
-     * @return
+     * @return string representation of HTTP verb such as GET, POST in uppercase
      */
     public String getVerb() {
     	return this.request.getMethod().toUpperCase();
@@ -286,7 +341,8 @@ public class WebRequest {
     /**
      * Return the URI associated with this request.
      * 
-     * @return
+     * @return the {@link URI} for this request.
+     * 
      */
     public URI getURI() {
     	return this.request.getURI();
@@ -295,7 +351,8 @@ public class WebRequest {
     /**
      * Return the type of request that we encapsulate.
      * 
-     * @return
+     * @return the {@link WebRequestMethod} identifying request type.
+     * 
      */
     public WebRequestMethod getWebRequestMethod() {
     	if(this.request instanceof HttpGet) {
@@ -330,12 +387,16 @@ public class WebRequest {
     }
 
     /**
-     * Execute this web request now.
-     * 
-     * @return
-     * @throws ClientProtocolException
-     * @throws IOException
-     */
+	 * Execute this web request now.
+	 * 
+	 * @return the obtained {@link WebRawResponse}.
+	 * 
+	 * @throws ClientProtocolException
+	 *             if client protocol fails
+	 * 
+	 * @throws IOException
+	 *             if something else fails
+	 */
     public WebRawResponse execute() throws ClientProtocolException, IOException {
         return HttpExecutor.DEFAULT.execute(this);
     }
@@ -343,7 +404,7 @@ public class WebRequest {
     /**
      * Abort this request now.
      * 
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException if cannot abort
      */
     public void abort() throws UnsupportedOperationException {
         this.request.abort();
@@ -352,77 +413,94 @@ public class WebRequest {
     //// HTTP header operations
 
     /**
-     * Add the given header to the request
-     * 
-     * @param header
-     * @return
-     */
+	 * Add the given header to the request
+	 * 
+	 * @param header
+	 *            the {@link Header} object to use
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest addHeader(final Header header) {
         this.request.addHeader(header);
         return this;
     }
 
     /**
-     * Add a new header with the given name and value
-     * 
-     * @param name
-     * @param value
-     * @return
-     */
+	 * Add a new header with the given name and value
+	 * 
+	 * @param name
+	 *            the header name
+	 * 
+	 * @param value
+	 *            the header value
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest addHeader(final String name, final String value) {
         this.request.addHeader(name, value);
         return this;
     }
 
     /**
-     * Remove the given header
-     * 
-     * @param header
-     * @return
-     */
+	 * Remove the given header
+	 * 
+	 * @param header
+	 *            the header name to remove
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest removeHeader(final Header header) {
         this.request.removeHeader(header);
         return this;
     }
 
     /**
-     * Remove all headers with the given name.
-     * 
-     * @param name
-     * @return
-     */
+	 * Remove all headers with the given name.
+	 * 
+	 * @param name
+	 *            the header name to remove
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest removeHeaders(final String name) {
         this.request.removeHeaders(name);
         return this;
     }
 
     /**
-     * Set the request headers to the given list of headers.
-     * 
-     * @param headers
-     * @return
-     */
+	 * Set the request headers to the given list of headers.
+	 * 
+	 * @param headers
+	 *            headers to set
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest setHeaders(final Header[] headers) {
         this.request.setHeaders(headers);
         return this;
     }
 
     /**
-     * Set cache-control as the given one.
-     * 
-     * @param cacheControl
-     * @return
-     */
+	 * Set cache-control as the given one.
+	 * 
+	 * @param cacheControl
+	 *            the value to set
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest setCacheControl(String cacheControl) {
         this.request.setHeader(HttpHeaders.CACHE_CONTROL, cacheControl);
         return this;
     }
 
     /**
-     * 
-     * @return
-     */
-    private SimpleDateFormat getDateFormat() {
+	 * The associated {@link DateFormat} instance. If nothing is set, returns
+	 * {@link SimpleDateFormat} for {@link #DATE_FORMAT} in {@link #DATE_LOCALE}
+	 * and {@link #TIME_ZONE}.
+	 * 
+	 * @return the date format
+	 */
+    private DateFormat getDateFormat() {
         if (this.dateFormatter == null) {
             this.dateFormatter = new SimpleDateFormat(DATE_FORMAT, DATE_LOCALE);
             this.dateFormatter.setTimeZone(TIME_ZONE);
@@ -431,33 +509,39 @@ public class WebRequest {
     }
 
     /**
-     * Set the request date header to the given date value.
-     * 
-     * @param date
-     * @return
-     */
+	 * Set the request date header to the given date value.
+	 * 
+	 * @param date
+	 *            the {@link Date} value for header
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest setDate(final Date date) {
         this.request.setHeader(HttpHeaders.DATE, getDateFormat().format(date));
         return this;
     }
 
     /**
-     * Set the If-Modified-Since header to the given date value.
-     * 
-     * @param date
-     * @return
-     */
+	 * Set the If-Modified-Since header to the given date value.
+	 * 
+	 * @param date
+	 *            the {@link Date} value for header
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest setIfModifiedSince(final Date date) {
         this.request.setHeader(HttpHeaders.IF_MODIFIED_SINCE, getDateFormat().format(date));
         return this;
     }
 
     /**
-     * Set the If-Unmodified-Since header to the given date value
-     *  
-     * @param date
-     * @return
-     */
+	 * Set the If-Unmodified-Since header to the given date value
+	 * 
+	 * @param date
+	 *            the {@link Date} value for header
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest setIfUnmodifiedSince(final Date date) {
         this.request.setHeader(HttpHeaders.IF_UNMODIFIED_SINCE, getDateFormat().format(date));
         return this;
@@ -466,23 +550,29 @@ public class WebRequest {
     //// HTTP config parameter operations
 
     /**
-     * Set the local param for this request to the value.
-     * 
-     * @param param
-     * @param object
-     * @return
-     */
+	 * Set the local param for this request to the value.
+	 * 
+	 * @param param
+	 *            the param name
+	 * 
+	 * @param object
+	 *            the value of the param
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest config(final String param, final Object object) {
         this.localParams.setParameter(param, object);
         return this;
     }
 
     /**
-     * Remove the local config param from this request with the given name
-     * 
-     * @param param
-     * @return
-     */
+	 * Remove the local config param from this request with the given name
+	 * 
+	 * @param param
+	 *            the param name to remove
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest removeConfig(final String param) {
         this.localParams.removeParameter(param);
         return this;
@@ -491,38 +581,46 @@ public class WebRequest {
     //// HTTP protocol parameter operations
 
     /**
-     * Set the request HTTP Protocol version
-     * 
-     * @param version
-     * @return
-     */
+	 * Set the request HTTP Protocol version
+	 * 
+	 * @param version
+	 *            {@link HttpVersion} to use
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest version(final HttpVersion version) {
         return config(CoreProtocolPNames.PROTOCOL_VERSION, version);
     }
 
     /**
-     * 
-     * @param charset
-     * @return
-     */
+	 * Set the {@link Charset} for the given request
+	 * 
+	 * @param charset
+	 *            the {@link Charset} to use
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest elementCharset(final String charset) {
         return config(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, charset);
     }
 
     /**
+     * Set the request to use expect continue.
      * 
-     * @return
+     * @return this very {@link WebRequest}
      */
     public WebRequest useExpectContinue() {
         return config(CoreProtocolPNames.USE_EXPECT_CONTINUE, true);
     }
 
     /**
-     * Set the request User-Agent string to the given one.
-     * 
-     * @param agent
-     * @return
-     */
+	 * Set the request User-Agent string to the given one.
+	 * 
+	 * @param agent
+	 *            the user-agent string
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest userAgent(final String agent) {
         return config(CoreProtocolPNames.USER_AGENT, agent);
     }
@@ -530,10 +628,10 @@ public class WebRequest {
     //// HTTP connection parameter operations
     
     /**
-     * Follow redirects for the request
-     * 
-     * @return
-     */
+	 * Follow redirects for the request
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest followRedirects() {
     	HttpParams params = this.request.getParams();
     	params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, true);
@@ -543,7 +641,7 @@ public class WebRequest {
     /**
      * Do not follow any redirects
      * 
-     * @return
+     * @return this very {@link WebRequest}
      */
     public WebRequest noRedirects() {
     	HttpParams params = this.request.getParams();
@@ -552,32 +650,39 @@ public class WebRequest {
     }
     
     /**
-     * Specify the socket time out to the given value.
-     * 
-     * @param timeout
-     * @return
-     */
+	 * Specify the socket time out to the given value.
+	 * 
+	 * @param timeout
+	 *            the timeout value
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest socketTimeout(int timeout) {
         return config(CoreConnectionPNames.SO_TIMEOUT, timeout);
     }
     
     /**
-     * Specify the connection time out to the given value.
-     * 
-     * @param timeout
-     * @return
-     */
+	 * Specify the connection time out to the given value.
+	 * 
+	 * @param timeout
+	 *            the timeout value
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest connectTimeout(int timeout) {
         return config(CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);
     }
 
     /**
-     * Specifies if stale connection check needs to be performed before
-     * making a connection.
-     * 
-     * @param perform
-     * @return
-     */
+	 * Specifies if stale connection check needs to be performed before making a
+	 * connection.
+	 * 
+	 * @param perform
+	 *            <code>true</code>if stale connection checks needs to be
+	 *            performed, <code>false</code> otherwise
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest staleConnectionCheck(boolean perform) {
         return config(CoreConnectionPNames.STALE_CONNECTION_CHECK, perform);
     }
@@ -585,10 +690,13 @@ public class WebRequest {
     //// HTTP connection route operations
 
     /**
-     * 
-     * @param proxy
-     * @return
-     */
+	 * Set the proxy via given http host.
+	 * 
+	 * @param proxy
+	 *            the {@link HttpHost} to use for proxy
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest viaProxy(final HttpHost proxy) {
         return config(ConnRoutePNames.DEFAULT_PROXY, proxy);
     }
@@ -596,10 +704,13 @@ public class WebRequest {
     //// HTTP entity operations
 
     /**
-     * 
-     * @param entity
-     * @return
-     */
+	 * Set the body from given {@link HttpEntity}.
+	 * 
+	 * @param entity
+	 *            the {@link HttpEntity} to set body from
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest body(final HttpEntity entity) {
         if (this.request instanceof HttpEntityEnclosingRequest) {
             ((HttpEntityEnclosingRequest) this.request).setEntity(entity);
@@ -611,95 +722,138 @@ public class WebRequest {
     }
 
     /**
-     * 
-     * @param formParams
-     * @param charset
-     * @return
-     */
+	 * Set the body using FORM variables in given {@link Charset}
+	 * 
+	 * @param formParams
+	 *            the form params
+	 * 
+	 * @param charset
+	 *            the {@link Charset} for params
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest bodyForm(final Iterable <? extends NameValuePair> formParams, final Charset charset) {
         return body(new UrlEncodedFormEntity(formParams, charset));
     }
 
     /**
-     * 
-     * @param formParams
-     * @return
-     */
+	 * Set the body using FORM variables
+	 * 
+	 * @param formParams
+	 *            the form params
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest bodyForm(final Iterable <? extends NameValuePair> formParams) {
         return bodyForm(formParams, HTTP.DEF_CONTENT_CHARSET);
     }
 
     /**
-     * 
-     * @param formParams
-     * @return
-     */
+	 * Set the body using FORM variables
+	 * 
+	 * @param formParams
+	 *            the form parameters
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest bodyForm(final NameValuePair... formParams) {
         return bodyForm(Arrays.asList(formParams), HTTP.DEF_CONTENT_CHARSET);
     }
 
     /**
-     * 
-     * @param s
-     * @param contentType
-     * @return
-     */
-    public WebRequest bodyString(final String s, final ContentType contentType) {
-        return body(new StringEntity(s, contentType));
+	 * Set the body from the string for given content type.
+	 * 
+	 * @param string
+	 *            the string to set body from
+	 * 
+	 * @param contentType
+	 *            the {@link ContentType} of the string
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
+    public WebRequest bodyString(final String string, final ContentType contentType) {
+        return body(new StringEntity(string, contentType));
     }
 
     /**
-     * 
-     * @param file
-     * @param contentType
-     * @return
-     */
+	 * Set the body from given file for the given content type.
+	 * 
+	 * @param file
+	 *            the {@link File} to read from
+	 * 
+	 * @param contentType
+	 *            the {@link ContentType} of the file
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest bodyFile(final File file, final ContentType contentType) {
         return body(new FileEntity(file, contentType));
     }
 
     /**
-     * 
-     * @param b
-     * @return
-     */
-    public WebRequest bodyByteArray(final byte[] b) {
-        return body(new ByteArrayEntity(b));
+	 * Set the body from given byte array.
+	 * 
+	 * @param bytes
+	 *            the byte array
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
+    public WebRequest bodyByteArray(final byte[] bytes) {
+        return body(new ByteArrayEntity(bytes));
     }
 
     /**
-     * 
-     * @param b
-     * @param off
-     * @param len
-     * @return
-     */
-    public WebRequest bodyByteArray(final byte[] b, int off, int len) {
-        return body(new ByteArrayEntity(b, off, len));
+	 * Set the body from given byte array.
+	 * 
+	 * @param bytes
+	 *            the byte array
+	 * 
+	 * @param offset
+	 *            the offset to read from
+	 * 
+	 * @param length
+	 *            the number of bytes to read
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
+    public WebRequest bodyByteArray(final byte[] bytes, int offset, int length) {
+        return body(new ByteArrayEntity(bytes, offset, length));
     }
 
     /**
-     * 
-     * @param instream
-     * @return
-     */
+	 * Set the body stream from given input stream.
+	 * 
+	 * @param instream
+	 *            the {@link InputStream} to read from
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest bodyStream(final InputStream instream) {
         return body(new InputStreamEntity(instream, -1));
     }
 
     /**
-     * 
-     * @param instream
-     * @param contentType
-     * @return
-     */
+	 * Set the body stream from given input stream of given content type.
+	 * 
+	 * @param instream
+	 *            the {@link InputStream} from which to read
+	 * 
+	 * @param contentType
+	 *            the {@link ContentType} of the stream
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
     public WebRequest bodyStream(final InputStream instream, final ContentType contentType) {
         return body(new InputStreamEntity(instream, -1, contentType));
     }
 
 	/**
+	 * Change the cookie policy to given cookie policy name
+	 * 
 	 * @param cookiePolicy
-	 * @return
+	 *            the cookie policy name
+	 * 
+	 * @return this very {@link WebRequest}
 	 */
 	public WebRequest cookiePolicy(String cookiePolicy) {
 		this.request.getParams().setParameter(ClientPNames.COOKIE_POLICY, cookiePolicy);
@@ -707,10 +861,10 @@ public class WebRequest {
 	}
 
     /**
-     * Convert this request to {@link String} format. This is basically a 
-     * representation of the request line that will be sent over the wire.
-     * 
-     */
+	 * Convert this request to {@link String} format. This is basically a
+	 * representation of the request line that will be sent over the wire.
+	 * 
+	 */
     @Override
     public String toString() {
         return this.request.getRequestLine().toString();
