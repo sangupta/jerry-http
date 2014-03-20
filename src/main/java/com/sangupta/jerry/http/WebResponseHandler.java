@@ -1,9 +1,9 @@
 /**
  *
- * jerry - Common Java Functionality
- * Copyright (c) 2012, Sandeep Gupta
+ * jerry-http - Common Java Functionality
+ * Copyright (c) 2012-2014, Sandeep Gupta
  * 
- * http://www.sangupta/projects/jerry
+ * http://sangupta.com/projects/jerry-http
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
