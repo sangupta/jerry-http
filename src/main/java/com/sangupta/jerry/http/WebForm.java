@@ -30,6 +30,8 @@ import java.util.Map.Entry;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.sangupta.jerry.util.AssertUtils;
+
 /**
  * Builder class to help add form parameters to a {@link WebRequest} object.
  * 
@@ -41,7 +43,7 @@ public class WebForm {
 	/**
 	 * Internal list of all params that have been added
 	 */
-	private List<NameValuePair> params;
+	private final List<NameValuePair> params;
 	
 	/**
 	 * Private constructor
@@ -61,7 +63,8 @@ public class WebForm {
 	}
 
 	/**
-	 * Add a new parameter and value to this form.
+	 * Add a new parameter and value to this form. Any existing duplicates will
+	 * be replaced.
 	 * 
 	 * @param name
 	 *            the param name
@@ -72,8 +75,63 @@ public class WebForm {
 	 * @return this very {@link WebForm}
 	 */
 	public WebForm addParam(final String name, final String value) {
-		this.params.add(new BasicNameValuePair(name, value));
+		return this.addParam(name, value, false);
+	}
+	
+	/**
+	 * Add a new parameter and value to this form.
+	 * 
+	 * @param name
+	 *            the param name
+	 * 
+	 * @param value
+	 *            the param value
+	 * 
+	 * @param keepDuplicates
+	 * 			  whether to preserve duplicates or not
+	 * 
+	 * @return this very {@link WebForm}
+	 */
+	public WebForm addParam(final String name, final String value, final boolean keepDuplicates) {
+		if(AssertUtils.isEmpty(name)) {
+			throw new IllegalArgumentException("Parameter name cannot be null/empty");
+		}
+		
+		NameValuePair newPair = new BasicNameValuePair(name, value);
+		
+		if(!keepDuplicates) {
+			if(this.params.isEmpty()) {
+				this.params.add(newPair);
+				return this;
+			}
+			
+			for(int index = 0; index < this.params.size(); index++) {
+				NameValuePair pair = this.params.get(index);
+				if(name.equals(pair.getName())) {
+					// we need to replace this
+					this.params.remove(index);
+					this.params.add(index, newPair);
+					return this;
+				}
+			}
+		}
+		
+		this.params.add(newPair);
 		return this;
+	}
+	
+	/**
+	 * Add all map entries to this form. This method is safe against
+	 * <code>null</code> being passed as input parameter object. The
+	 * parameters will replace any existing parameter.
+	 * 
+	 * @param params
+	 *            the params to add
+	 * 
+	 * @return this very {@link WebForm}
+	 */
+	public WebForm addParams(Map<String, String> params) {
+		return this.addParams(params, false);
 	}
 	
 	/**
@@ -83,18 +141,41 @@ public class WebForm {
 	 * @param params
 	 *            the params to add
 	 * 
+	 * @param keepDuplicates
+	 * 			  whether to preserve duplicates or replace them
+	 * 
 	 * @return this very {@link WebForm}
 	 */
-	public WebForm addParams(Map<String, String> params) {
+	public WebForm addParams(Map<String, String> params, final boolean keepDuplicates) {
 		if(params == null) {
 			return this;
 		}
 		
 		for(Entry<String, String> entry : params.entrySet()) {
-			this.params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+			this.addParam(entry.getKey(), entry.getValue(), keepDuplicates);
 		}
 		
 		return this;
+	}
+	
+	/**
+	 * Check if the current web form contains any parameters or not.
+	 * 
+	 * @return <code>true</code> if the form has no params added,
+	 *         <code>false</code> otherwise.
+	 * 
+	 */
+	public boolean isEmpty() {
+		return this.params.isEmpty();
+	}
+	
+	/**
+	 * Removes all of the elements from this operation. The form will be empty
+	 * after this call returns.
+	 * 
+	 */
+	public void clear() {
+		this.params.clear();
 	}
 	
 	/**
@@ -105,4 +186,5 @@ public class WebForm {
 	public List<NameValuePair> build() {
 		return Collections.unmodifiableList(this.params);
 	}
+	
 }
