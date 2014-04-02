@@ -62,6 +62,8 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
+import com.sangupta.jerry.util.StringUtils;
+
 /**
  * A wrapper that provides a builder based way to constructing a web request,
  * executing it via the default {@link HttpExecutor} and then returning the raw
@@ -301,12 +303,17 @@ public class WebRequest {
 	 * 
 	 * @return this very {@link WebRequest}
 	 */
-    public WebRequest trace() {
-    	System.out.println(this.request.getRequestLine());
+    public String trace() {
+    	StringBuilder builder = new StringBuilder();
+    	
+    	builder.append(this.request.getRequestLine());
+    	builder.append(StringUtils.SYSTEM_NEW_LINE);
+    	
     	Header[] headers = this.request.getAllHeaders();
     	if(headers != null) {
     		for(Header header : headers) {
-    			System.out.println(header.toString());
+    			builder.append(header.toString());
+    			builder.append(StringUtils.SYSTEM_NEW_LINE);
     		}
     	}
     	
@@ -315,18 +322,23 @@ public class WebRequest {
     		HttpEntity entity = hecr.getEntity();
     		if(entity != null) {
     			if(entity.getContentType() != null) {
-    				System.out.println(entity.getContentType().toString());
+    				builder.append("Content-Type: ");
+    				builder.append(entity.getContentType().toString());
+    				builder.append(StringUtils.SYSTEM_NEW_LINE);
     			}
     			
     			if(entity.getContentEncoding() != null) {
-    				System.out.println(entity.getContentEncoding().toString());
+    				builder.append(entity.getContentEncoding().toString());
+    				builder.append(StringUtils.SYSTEM_NEW_LINE);
     			}
     			
-    			System.out.println("Content-Length: " + entity.getContentLength());
+    			builder.append("Content-Length: ");
+    			builder.append(entity.getContentLength());
+    			builder.append(StringUtils.SYSTEM_NEW_LINE);
     		}
     	}
     	
-    	return this;
+    	return builder.toString();
     }
     
     /**
