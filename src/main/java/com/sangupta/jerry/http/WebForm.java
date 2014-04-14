@@ -61,6 +61,28 @@ public class WebForm {
 	public static WebForm newForm() {
 		return new WebForm();
 	}
+	
+	/**
+	 * Return the values of the parameter with the given name.
+	 * 
+	 * @param name
+	 *            the param name
+	 * 
+	 * @return the list containing all values of the parameter, or
+	 *         <code>empty</code> list if the parameter is not present
+	 */
+	public List<String> getParam(final String name) {
+		List<String> values = new ArrayList<String>();
+		
+		for(int index = 0; index < this.params.size(); index++) {
+			NameValuePair pair = this.params.get(index);
+			if(name.equals(pair.getName())) {
+				values.add(pair.getValue());
+			}
+		}
+		
+		return values;
+	}
 
 	/**
 	 * Add a new parameter and value to this form. Any existing duplicates will
