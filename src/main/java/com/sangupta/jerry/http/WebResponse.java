@@ -157,6 +157,10 @@ public class WebResponse implements Serializable, Closeable {
      * @return the byte array representation of the response
      */
     public byte[] asBytes() {
+    	if(this.bytes == null) {
+    		return null;
+    	}
+    	
     	return this.bytes.clone();
     }
     
