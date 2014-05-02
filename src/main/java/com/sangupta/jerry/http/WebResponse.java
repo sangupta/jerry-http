@@ -151,12 +151,23 @@ public class WebResponse implements Serializable, Closeable {
     }
     
     /**
-     * Return the fetched response as a byte-array. The returned byte-array is
-     * a clone of the response array.
+     * Return the fetched response as a byte-array. The returned byte-array is the actual
+     * byte-array. Any modification to the same, will cause a change in the subsequent call
+     * to {@link #asStream()}, {@link #getContent()} or {@link #asString(Charset)} methods.
      * 
      * @return the byte array representation of the response
      */
     public byte[] asBytes() {
+    	return this.bytes;
+    }
+    
+    /**
+	 * Return the fetched response as a byte-array. The returned byte-array is a
+	 * clone of the response array.
+	 * 
+	 * @return the byte array representation of the response
+	 */
+    public byte[] asClonedBytes() {
     	if(this.bytes == null) {
     		return null;
     	}
