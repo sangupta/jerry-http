@@ -17,9 +17,32 @@ The library can be downloaded from Maven Central using:
 <dependency>
     <groupId>com.sangupta</groupId>
     <artifactId>jerry-http</artifactId>
-    <version>0.9.2</version>
+    <version>0.9.5</version>
 </dependency>
 ```
+
+Release Notes
+-------------
+
+**0.9.5 (23 May 2014)**
+
+* Updated dependency versions for `xstream`, `gson`, and `jerry-core`
+
+**0.9.4 (23 May 2014)**
+
+* Stopped cloning on response byte[] stream for performance reasons
+* Fixed a null pointer exception
+* Added method to return the value of parameter in a `WebForm`
+
+**0.9.2 (02 Apr 2014)**
+
+* Updated `WebResponse.trace()` method to display more relevant details
+* Added option to replace a parameter in `WebForm`
+* Updated JavaDocs
+
+**0.9.0 (08 Feb 2014)**
+
+* Initial release after bifurcation from `jerry` project
 
 Versioning
 ----------
