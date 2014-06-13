@@ -786,7 +786,57 @@ public class WebRequest {
     public WebRequest bodyString(final String string, final ContentType contentType) {
         return body(new StringEntity(string, contentType));
     }
+    
+    /**
+	 * Set the body from the string for given {@link Charset}.
+	 * 
+	 * @param string
+	 *            the string to set body from
+	 * 
+	 * @param charset
+	 *            the {@link Charset} encoding for the string
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
+    public WebRequest bodyString(final String string, final Charset charset) {
+    	return body(new StringEntity(string, charset));
+    }
+    
+    /**
+	 * Set the body from the string for given mime-type.
+	 * 
+	 * @param string
+	 *            the string to set body from
+	 * 
+	 * @param mimeType
+	 *            the MIME type of the string
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
+    public WebRequest bodyString(final String string, final String mimeType) {
+    	ContentType contentType = ContentType.create(mimeType);
+    	return body(new StringEntity(string, contentType));
+    }
 
+    /**
+	 * Set the body from the string for given MIME type and {@link Charset}
+	 * 
+	 * @param string
+	 *            the string to set body from
+	 * 
+	 * @param mimeType
+	 *            the MIME type of the string
+	 * 
+	 * @param charset
+	 *            the {@link Charset} encoding for string
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
+    public WebRequest bodyString(final String string, final String mimeType, final String charset) {
+    	ContentType contentType = ContentType.create(mimeType, charset);
+    	return body(new StringEntity(string, contentType));
+    }
+    
     /**
 	 * Set the body from given file for the given content type.
 	 * 
