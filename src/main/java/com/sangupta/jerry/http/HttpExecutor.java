@@ -42,7 +42,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -52,8 +52,10 @@ import org.apache.http.conn.ssl.SSLInitializationException;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
@@ -73,7 +75,7 @@ public class HttpExecutor {
      *  This connection manager must be used if more than one thread will
      *  be using the HttpClient.
      */
-	private static final PoolingClientConnectionManager HTTP_CONNECTION_MANAGER;
+	private static final PoolingHttpClientConnectionManager HTTP_CONNECTION_MANAGER;
 	
 	/**
 	 * The singleton instance of HttpClient
@@ -131,10 +133,12 @@ public class HttpExecutor {
             schemeRegistry.register(new Scheme("https", 443, ssl));
         }
         
-        HTTP_CONNECTION_MANAGER = new PoolingClientConnectionManager(schemeRegistry);
+        HTTP_CONNECTION_MANAGER = new PoolingHttpClientConnectionManager();
         HTTP_CONNECTION_MANAGER.setDefaultMaxPerRoute(100);
         HTTP_CONNECTION_MANAGER.setMaxTotal(200);
-        HTTP_CLIENT = new HttpRateLimitingClient(new DefaultHttpClient(HTTP_CONNECTION_MANAGER));
+        CloseableHttpClient closeableHttpClient = HttpClients.custom().setConnectionManager(HTTP_CONNECTION_MANAGER).build();
+        HTTP_CLIENT = new HttpRateLimitingClient(closeableHttpClient);
+        
 	}
 	
 	/**
@@ -345,9 +349,9 @@ public class HttpExecutor {
 		// redirects in the second request
 		HttpContext localHttpContext = new BasicHttpContext();
 		
-        localHttpContext.setAttribute(ClientContext.CREDS_PROVIDER, this.credentialsProvider);
-        localHttpContext.setAttribute(ClientContext.AUTH_CACHE, this.authCache);
-        localHttpContext.setAttribute(ClientContext.COOKIE_STORE, this.cookieStore);
+        localHttpContext.setAttribute(HttpClientContext.CREDS_PROVIDER, this.credentialsProvider);
+        localHttpContext.setAttribute(HttpClientContext.AUTH_CACHE, this.authCache);
+        localHttpContext.setAttribute(HttpClientContext.COOKIE_STORE, this.cookieStore);
         
         // localHttpContext.removeAttribute(DefaultRedirectStrategy.REDIRECT_LOCATIONS);
         
@@ -607,6 +611,12 @@ public class HttpExecutor {
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
+		
+		try {
+			HTTP_CONNECTION_MANAGER.close();
+		} catch(Throwable t) {
+			// eat up
+		}
 
 		try {
 			HTTP_CONNECTION_MANAGER.shutdown();
