@@ -26,10 +26,12 @@ import java.io.Closeable;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.Consts;
@@ -81,6 +83,11 @@ public class WebResponse implements Serializable, Closeable {
     final Map<String, String> headers = new HashMap<String, String>();
     
     /**
+     * The redirect chain of {@link URI}s
+     */
+    List<URI> redirectChain;
+    
+    /**
      * The size of the response
      */
     long size;
@@ -89,6 +96,15 @@ public class WebResponse implements Serializable, Closeable {
     	this.bytes = bytes;
     }
     
+    /**
+     * Set the redirect chain
+     * 
+     * @param redirectChain
+     */
+	void setRedirectChain(List<URI> redirectChain) {
+		this.redirectChain = redirectChain;
+	}
+
     @Override
     public void close() {
     	try {
@@ -101,10 +117,23 @@ public class WebResponse implements Serializable, Closeable {
     	}
     }
     
+    /**
+     * Read the response stream as a {@link String} object considering
+     * UTF-8 encoding.
+     * 
+     * @return
+     */
     public String getContent() {
     	return asString(Consts.UTF_8);
     }
     
+    /**
+     * Read the response stream as a {@link String} object considering
+     * the given {@link Charset} encoding
+     * 
+     * @param charset
+     * @return
+     */
     public String asContent(Charset charset) {
     	return asString(charset);
     }
@@ -355,6 +384,35 @@ public class WebResponse implements Serializable, Closeable {
 	 */
 	public Charset getCharSet() {
 		return charSet;
+	}
+
+	/**
+	 * @return the redirectChain
+	 */
+	public List<URI> getRedirectChain() {
+		return redirectChain;
+	}
+	
+	/**
+	 * Indicates if the response was fetched from a redirected resource.
+	 * 
+	 * @return
+	 */
+	public boolean hasRedirects() {
+		return !this.redirectChain.isEmpty();
+	}
+	
+	/**
+	 * Returns the final URL that was used to hit a resource.
+	 * 
+	 * @return
+	 */
+	public URI getFinalURI() {
+		if(!this.hasRedirects()) {
+			return null;
+		}
+		
+		return this.redirectChain.get(this.redirectChain.size() - 1);
 	}
 
 }

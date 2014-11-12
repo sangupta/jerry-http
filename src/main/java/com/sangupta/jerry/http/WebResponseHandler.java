@@ -31,7 +31,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.RedirectLocations;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import com.sangupta.jerry.util.AssertUtils;
@@ -44,13 +47,13 @@ import com.sangupta.jerry.util.AssertUtils;
  * 
  * @since 0.3
  */
-public class WebResponseHandler implements ResponseHandler<WebResponse> {
+public class WebResponseHandler implements HttpResponseHandler<WebResponse> {
 
 	/**
 	 * @see org.apache.http.client.ResponseHandler#handleResponse(org.apache.http.HttpResponse)
 	 */
 	@Override
-	public WebResponse handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+	public WebResponse handleResponse(HttpResponse response, HttpContext localHttpContext) throws ClientProtocolException, IOException {
 		StatusLine statusLine = response.getStatusLine();
         HttpEntity entity = response.getEntity();
         
@@ -106,6 +109,12 @@ public class WebResponseHandler implements ResponseHandler<WebResponse> {
         } catch(UnsupportedCharsetException e) {
         	// we are unable to find the charset for the content
         	// let's leave it to be considered binary
+        }
+        
+        // fill in the redirect uri chain
+        RedirectLocations locations = (RedirectLocations) localHttpContext.getAttribute(HttpClientContext.REDIRECT_LOCATIONS);
+        if(AssertUtils.isNotEmpty(locations)) {
+        	webResponse.setRedirectChain(locations.getAll());
         }
         
 		// return the object finally

@@ -35,6 +35,7 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 /**
@@ -54,20 +55,32 @@ public class WebRawResponse {
 	private final HttpResponse response;
 	
 	/**
+	 * Internal {@link HttpContext} handle
+	 */
+	private final HttpContext localHttpContext;
+	
+	/**
 	 * Flag that signifies if the response stream has been consumed
 	 * or not.
 	 */
     private boolean consumed;
 
     /**
-     * Constructor that takes a {@link HttpResponse} object and stores
-     * it internally for processing.
-     * 
-     * @param response
-     */
-    WebRawResponse(final HttpResponse response) {
+	 * Constructor that takes a {@link HttpResponse} object and stores it
+	 * internally for processing.
+	 * 
+	 * @param response
+	 *            the actual {@link HttpResponse} object that was returned from
+	 *            the server
+	 * 
+	 * @param localHttpContext
+	 *            the local {@link HttpContext} as applicable to this request
+	 * 
+	 */
+    WebRawResponse(final HttpResponse response, HttpContext localHttpContext) {
         super();
         this.response = response;
+        this.localHttpContext = localHttpContext;
     }
 
     /**
@@ -119,10 +132,10 @@ public class WebRawResponse {
 	 *             if something fails
 	 * 
 	 */
-    public <T> T handleResponse(final ResponseHandler<T> handler) throws ClientProtocolException, IOException {
+    public <T> T handleResponse(final HttpResponseHandler<T> handler) throws ClientProtocolException, IOException {
         assertNotConsumed();
         try {
-            return handler.handleResponse(this.response);
+            return handler.handleResponse(this.response, this.localHttpContext);
         } finally {
             dispose();
         }
