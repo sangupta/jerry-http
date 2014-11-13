@@ -1,12 +1,59 @@
 jerry-http
 ==========
 
-Common Java functionality for working with HTTP requests.
+Common Java functionality for working with HTTP requests. It hides the complexities of setting up
+and configuring the `Apache HTTP Client Library` in the code, and uses the same to make all requests.
+This helps reduce a lot of boiler-plate code, as you can get started from the word `go`.
 
 `jerry-http` is a module library for the uber `jerry` library project. This module provides easy
 wrapper functionality to work with HTTP requests using the Apache HTTP client library.
 
 For more information on the project, refer to the uber https://github.com/sangupta/jerry project.
+
+Features
+--------
+
+* Make web requests without all the boiler plate code of the Apache HTTP Client Library
+* Use sensible defaults for connection/socket timeout and others
+* Adds mechanism for rate-limiting calls to an end-point or host
+* Many convenience methods to get request/response data
+* Deal with two standard POJO objects than deal with many Apache HC specific objects
+* 
+
+Usage
+-----
+
+`jerry-http` makes working with HTTP requests super easy. To fetch a response from the server, use,
+
+```java
+WebResponse response = WebInvoker.getResponse("https://github.com");
+```
+
+If you want to have total control over your request, you may do as:
+
+```java
+WebRequest request = WebRequest.get("https://github.com")		// create the request
+							   .connectTimeout(1000)			// specify the connection timeout
+							   .socketTimeout(1000)				// specify the socket timeout
+							   .cookiePolicy(cookiePolicy)		// set up the cookie policy to be used
+							   .followRedirects();				// whether redirects need to be followed or not
+							   
+WebResponse response = request.execute().webResponse();
+
+// check if we succeeded
+if(response.isServerError()) {
+}
+
+if(response.isClientError()) {
+}
+
+if(response.isSuccess()) {
+	String content = response.getContent();
+}
+```
+
+Many other convenience methods are available in `WebInvoker` and `WebResponse` to deal with.
+
 
 Downloads
 ---------
@@ -17,12 +64,26 @@ The library can be downloaded from Maven Central using:
 <dependency>
     <groupId>com.sangupta</groupId>
     <artifactId>jerry-http</artifactId>
-    <version>0.9.5</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
 Release Notes
 -------------
+
+**1.0.0 (13 Nov 2014)**
+
+* Move to 1.0.0 release as library is quite stable now
+* Added flag in `WebResponse` to indicate if the request redirected before getting a response
+* Added method to `WebResponse` to fetch the entire redirected chain of `URI`s
+
+**0.10.0 (28 Oct 2014)**
+
+* Upgraded Apache HttpClient and other dependencies to latest released versions
+
+**0.9.6 (13 Jun 2014)**
+
+* Added methods to update the request body from `String` objects
 
 **0.9.5 (23 May 2014)**
 
