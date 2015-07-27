@@ -24,13 +24,9 @@ package com.sangupta.jerry.http;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -43,13 +39,14 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.scheme.SchemeSocketFactory;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLInitializationException;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -57,6 +54,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sangupta.jerry.util.AssertUtils;
 
@@ -68,6 +67,8 @@ import com.sangupta.jerry.util.AssertUtils;
  * @since 0.3
  */
 public class HttpExecutor {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(HttpExecutor.class);
 
     /**
      *  Create an HttpClient with the PoolingClientConnectionManager.
@@ -75,6 +76,21 @@ public class HttpExecutor {
      *  be using the HttpClient.
      */
 	private static final PoolingHttpClientConnectionManager HTTP_CONNECTION_MANAGER;
+	
+	/**
+	 * Maximum number of connections per route
+	 */
+	private static final int MAX_CONNECTIONS_PER_ROUTE = 5;
+	
+	/**
+	 * Maximum number of total connections
+	 */
+	private static final int MAX_TOTAL_CONNECTIONS = 500;
+	
+	/**
+	 * Time after which the connection should be checked for validity
+	 */
+	private static final int VALIDATE_CONNECTION_AFTER_INACTIVITY_MILLIS = 1000;
 	
 	/**
 	 * The singleton instance of HttpClient
@@ -85,59 +101,36 @@ public class HttpExecutor {
 	 * Build up the default instance
 	 */
 	static {
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
-        SchemeSocketFactory plain = PlainSocketFactory.getSocketFactory();
-        schemeRegistry.register(new Scheme("http", 80, plain));
-        SchemeSocketFactory ssl = null;
-        
+		LayeredConnectionSocketFactory ssl = null;
         try {
-            ssl = SSLSocketFactory.getSystemSocketFactory();
-        } catch (SSLInitializationException ex) {
-            SSLContext sslcontext;
+            ssl = SSLConnectionSocketFactory.getSystemSocketFactory();
+        } catch (final SSLInitializationException ex) {
+            final SSLContext sslcontext;
             try {
-                sslcontext = SSLContext.getInstance(SSLSocketFactory.TLS);
-                sslcontext.init(null, new TrustManager[] {
-                		
-                		// make sure that we accept all SSL certificates
-                		new X509TrustManager() {
-							
-							@Override
-							public X509Certificate[] getAcceptedIssuers() {
-								return null;
-							}
-							
-							@Override
-							public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-								
-							}
-							
-							@Override
-							public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-								
-							}
-						}
-                		
-                }, null);
-                ssl = new SSLSocketFactory(sslcontext);
-            } catch (SecurityException ignore) {
-            	// do nothing
-            } catch (KeyManagementException ignore) {
-            	// do nothing
-            } catch (NoSuchAlgorithmException ignore) {
-            	// do nothing
+                sslcontext = SSLContext.getInstance(SSLConnectionSocketFactory.TLS);
+                sslcontext.init(null, null, null);
+                ssl = new SSLConnectionSocketFactory(sslcontext);
+            } catch (final SecurityException e) {
+            	LOGGER.warn("Unable to initialize SSL", e);
+            } catch(NoSuchAlgorithmException e) {
+            	LOGGER.warn("Unable to initialize SSL", e);
+            } catch(KeyManagementException e) {
+            	LOGGER.warn("Unable to initialize SSL", e);
             }
         }
+
+        final Registry<ConnectionSocketFactory> sfr = RegistryBuilder.<ConnectionSocketFactory>create()
+            .register("http", PlainConnectionSocketFactory.getSocketFactory())
+            .register("https", ssl != null ? ssl : SSLConnectionSocketFactory.getSocketFactory())
+            .build();
         
-        if (ssl != null) {
-            schemeRegistry.register(new Scheme("https", 443, ssl));
-        }
+        HTTP_CONNECTION_MANAGER = new PoolingHttpClientConnectionManager(sfr);
+        HTTP_CONNECTION_MANAGER.setDefaultMaxPerRoute(MAX_CONNECTIONS_PER_ROUTE);
+        HTTP_CONNECTION_MANAGER.setMaxTotal(MAX_TOTAL_CONNECTIONS);
+        HTTP_CONNECTION_MANAGER.setValidateAfterInactivity(VALIDATE_CONNECTION_AFTER_INACTIVITY_MILLIS);
         
-        HTTP_CONNECTION_MANAGER = new PoolingHttpClientConnectionManager();
-        HTTP_CONNECTION_MANAGER.setDefaultMaxPerRoute(100);
-        HTTP_CONNECTION_MANAGER.setMaxTotal(200);
         CloseableHttpClient closeableHttpClient = HttpClients.custom().setConnectionManager(HTTP_CONNECTION_MANAGER).build();
         HTTP_CLIENT = new HttpRateLimitingClient(closeableHttpClient);
-        
 	}
 	
 	/**
