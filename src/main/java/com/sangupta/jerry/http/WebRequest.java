@@ -40,7 +40,10 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
+import org.apache.http.ProtocolVersion;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -50,15 +53,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpTrace;
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
@@ -89,7 +88,7 @@ public class WebRequest {
 	 * The GMT timezone
 	 */
 	public static final TimeZone TIME_ZONE = TimeZone.getTimeZone("GMT");
-
+	
 	/**
 	 * Create a HTTP GET based {@link WebRequest} for the given {@link URI}
 	 * 
@@ -268,7 +267,7 @@ public class WebRequest {
     /**
      * The associated {@link HttpParams}
      */
-    private final HttpParams localParams;
+    private final Builder requestConfigBuilder;
 
     /**
      * The associated {@link DateFormat} formatter
@@ -286,7 +285,7 @@ public class WebRequest {
     WebRequest(final HttpRequestBase request) {
         super();
         this.request = request;
-        this.localParams = request.getParams();
+        this.requestConfigBuilder = RequestConfig.copy(request.getConfig());
     }
 
     /**
@@ -410,6 +409,7 @@ public class WebRequest {
 	 *             if something else fails
 	 */
     public WebRawResponse execute() throws ClientProtocolException, IOException {
+    	this.request.setConfig(this.requestConfigBuilder.build());
         return HttpExecutor.DEFAULT.execute(this);
     }
 
@@ -559,37 +559,6 @@ public class WebRequest {
         return this;
     }
 
-    //// HTTP config parameter operations
-
-    /**
-	 * Set the local param for this request to the value.
-	 * 
-	 * @param param
-	 *            the param name
-	 * 
-	 * @param object
-	 *            the value of the param
-	 * 
-	 * @return this very {@link WebRequest}
-	 */
-    public WebRequest config(final String param, final Object object) {
-        this.localParams.setParameter(param, object);
-        return this;
-    }
-
-    /**
-	 * Remove the local config param from this request with the given name
-	 * 
-	 * @param param
-	 *            the param name to remove
-	 * 
-	 * @return this very {@link WebRequest}
-	 */
-    public WebRequest removeConfig(final String param) {
-        this.localParams.removeParameter(param);
-        return this;
-    }
-
     //// HTTP protocol parameter operations
 
     /**
@@ -601,19 +570,8 @@ public class WebRequest {
 	 * @return this very {@link WebRequest}
 	 */
     public WebRequest version(final HttpVersion version) {
-        return config(CoreProtocolPNames.PROTOCOL_VERSION, version);
-    }
-
-    /**
-	 * Set the {@link Charset} for the given request
-	 * 
-	 * @param charset
-	 *            the {@link Charset} to use
-	 * 
-	 * @return this very {@link WebRequest}
-	 */
-    public WebRequest elementCharset(final String charset) {
-        return config(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, charset);
+        this.request.setProtocolVersion((ProtocolVersion) version);
+        return this;
     }
 
     /**
@@ -622,7 +580,8 @@ public class WebRequest {
      * @return this very {@link WebRequest}
      */
     public WebRequest useExpectContinue() {
-        return config(CoreProtocolPNames.USE_EXPECT_CONTINUE, true);
+        this.requestConfigBuilder.setExpectContinueEnabled(true);
+        return this;
     }
 
     /**
@@ -634,7 +593,8 @@ public class WebRequest {
 	 * @return this very {@link WebRequest}
 	 */
     public WebRequest userAgent(final String agent) {
-        return config(CoreProtocolPNames.USER_AGENT, agent);
+    	this.request.setHeader(HttpHeaderName.USER_AGENT, agent);
+        return this;
     }
 
     //// HTTP connection parameter operations
@@ -645,8 +605,7 @@ public class WebRequest {
 	 * @return this very {@link WebRequest}
 	 */
     public WebRequest followRedirects() {
-    	HttpParams params = this.request.getParams();
-    	params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, true);
+    	this.requestConfigBuilder.setRedirectsEnabled(true);
     	return this;
     }
 
@@ -656,8 +615,7 @@ public class WebRequest {
      * @return this very {@link WebRequest}
      */
     public WebRequest noRedirects() {
-    	HttpParams params = this.request.getParams();
-    	params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
+    	this.requestConfigBuilder.setRedirectsEnabled(false);
     	return this;
     }
     
@@ -670,7 +628,8 @@ public class WebRequest {
 	 * @return this very {@link WebRequest}
 	 */
     public WebRequest socketTimeout(int timeout) {
-        return config(CoreConnectionPNames.SO_TIMEOUT, timeout);
+    	this.requestConfigBuilder.setSocketTimeout(timeout);
+        return this;
     }
     
     /**
@@ -682,21 +641,8 @@ public class WebRequest {
 	 * @return this very {@link WebRequest}
 	 */
     public WebRequest connectTimeout(int timeout) {
-        return config(CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);
-    }
-
-    /**
-	 * Specifies if stale connection check needs to be performed before making a
-	 * connection.
-	 * 
-	 * @param perform
-	 *            <code>true</code>if stale connection checks needs to be
-	 *            performed, <code>false</code> otherwise
-	 * 
-	 * @return this very {@link WebRequest}
-	 */
-    public WebRequest staleConnectionCheck(boolean perform) {
-        return config(CoreConnectionPNames.STALE_CONNECTION_CHECK, perform);
+    	this.requestConfigBuilder.setConnectTimeout(timeout);
+        return this;
     }
 
     //// HTTP connection route operations
@@ -710,7 +656,20 @@ public class WebRequest {
 	 * @return this very {@link WebRequest}
 	 */
     public WebRequest viaProxy(final HttpHost proxy) {
-        return config(ConnRoutePNames.DEFAULT_PROXY, proxy);
+    	this.requestConfigBuilder.setProxy(proxy);
+    	return this;
+    }
+    
+    /**
+	 * Set the proxy via the given host.
+	 * 
+	 * @param host
+	 *            the proxy host to use
+	 * 
+	 * @return this very {@link WebRequest}
+	 */
+    public WebRequest viaProxy(final String host) {
+    	return this.viaProxy(HttpHost.create(host));
     }
 
     //// HTTP entity operations
@@ -912,13 +871,13 @@ public class WebRequest {
 	/**
 	 * Change the cookie policy to given cookie policy name
 	 * 
-	 * @param cookiePolicy
+	 * @param cookieSpec
 	 *            the cookie policy name
 	 * 
 	 * @return this very {@link WebRequest}
 	 */
-	public WebRequest cookiePolicy(String cookiePolicy) {
-		this.request.getParams().setParameter(ClientPNames.COOKIE_POLICY, cookiePolicy);
+	public WebRequest cookiePolicy(String cookieSpec) {
+		this.requestConfigBuilder.setCookieSpec(cookieSpec);
 		return this;
 	}
 
