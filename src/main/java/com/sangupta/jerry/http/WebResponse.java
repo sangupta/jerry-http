@@ -36,6 +36,7 @@ import java.util.Map;
 
 import org.apache.http.Consts;
 import org.apache.http.HttpHeaders;
+import org.apache.http.client.utils.DateUtils;
 
 
 /**
@@ -215,7 +216,10 @@ public class WebResponse implements Serializable, Closeable {
     	String headerValue = getHeader(HttpHeaders.LAST_MODIFIED);
     	if(headerValue != null) {
     		try {
-    			return Date.parse(headerValue);
+    			Date date = DateUtils.parseDate(headerValue);
+    			if(date != null) {
+    				return date.getTime();
+    			}
     		} catch(Exception e) {
     			// eat this up
     		}
