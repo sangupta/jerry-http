@@ -287,6 +287,25 @@ public class HttpExecutor {
 		setMaxConnectionsOnHost(route, numConnections);
 	}
 	
+	/**
+	 * Close all idle connections that have been idle for longer than given
+	 * value.
+	 * 
+	 * @param idleForMillis
+	 *            idle time for a connection to clean up
+	 */
+	public static void closeIdleConnections(long idleForMillis) {
+		HTTP_CONNECTION_MANAGER.closeIdleConnections(idleForMillis, TimeUnit.MILLISECONDS);
+	}
+	
+	/**
+	 * Close all expired connections now.
+	 * 
+	 */
+	public static void closeExpiredConnections() {
+		HTTP_CONNECTION_MANAGER.closeExpiredConnections();
+	}
+	
 	// Instance class starts from here
 	
 	/**
