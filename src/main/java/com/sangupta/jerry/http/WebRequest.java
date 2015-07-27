@@ -49,6 +49,7 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpOptions;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -158,6 +159,30 @@ public class WebRequest {
      */
     public static WebRequest post(final String uri) {
         return new WebRequest(new HttpPost(uri));
+    }
+    
+    /**
+	 * Create a HTTP POST based {@link WebRequest} for the given {@link URI}
+	 * 
+	 * @param uri
+	 *            the {@link URI} for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
+     */
+    public static WebRequest patch(final URI uri) {
+        return new WebRequest(new HttpPatch(uri));
+    }
+
+    /**
+	 * Create a HTTP POST based {@link WebRequest} for the given string uri.
+	 * 
+	 * @param uri
+	 *            the string uri for which to create web request
+	 * 
+	 * @return the {@link WebRequest} object thus created
+     */
+    public static WebRequest patch(final String uri) {
+        return new WebRequest(new HttpPatch(uri));
     }
 
     /**
