@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.params.CookiePolicy;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -89,7 +89,7 @@ public class WebInvoker {
 	 * @return the string response body
 	 */
 	public static String fetchResponse(String url) {
-		return fetchResponse(url, CookiePolicy.BEST_MATCH);
+		return fetchResponse(url, CookieSpecs.DEFAULT);
 	}
 	
 	/**
@@ -127,7 +127,7 @@ public class WebInvoker {
 	 * @return the {@link WebResponse} obtained
 	 */
 	public static WebResponse getResponse(String url) {
-		return getResponse(url, CookiePolicy.BEST_MATCH);
+		return getResponse(url, CookieSpecs.DEFAULT);
 	}
 	
 	/**
@@ -165,7 +165,7 @@ public class WebInvoker {
 	 * @return a map of all header values
 	 */
 	public static Map<String, String> getHeaders(String url, boolean followRedirects) {
-		return getHeaders(url, followRedirects, CookiePolicy.BEST_MATCH);
+		return getHeaders(url, followRedirects, CookieSpecs.DEFAULT);
 	}
 	
 	/**
@@ -210,7 +210,7 @@ public class WebInvoker {
 	 * @return the {@link WebResponse} obtained
 	 */
 	public static WebResponse headRequest(String url, boolean followRedirects) {
-		return headRequest(url, followRedirects, CookiePolicy.BEST_MATCH);
+		return headRequest(url, followRedirects, CookieSpecs.DEFAULT);
 	}
 	
 	/**
