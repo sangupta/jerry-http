@@ -284,7 +284,12 @@ public class WebRequest {
     WebRequest(final HttpRequestBase request) {
         super();
         this.request = request;
-        this.requestConfigBuilder = RequestConfig.copy(request.getConfig());
+        RequestConfig config = request.getConfig();
+        if(config != null) {
+        	this.requestConfigBuilder = RequestConfig.copy(config);
+        } else {
+        	this.requestConfigBuilder = RequestConfig.custom();
+        }
     }
 
     /**
