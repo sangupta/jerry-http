@@ -50,7 +50,7 @@ import org.apache.http.conn.ssl.SSLInitializationException;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -129,7 +129,7 @@ public class HttpExecutor {
         HTTP_CONNECTION_MANAGER.setMaxTotal(MAX_TOTAL_CONNECTIONS);
         HTTP_CONNECTION_MANAGER.setValidateAfterInactivity(VALIDATE_CONNECTION_AFTER_INACTIVITY_MILLIS);
         
-        CloseableHttpClient closeableHttpClient = HttpClients.custom().setConnectionManager(HTTP_CONNECTION_MANAGER).build();
+        CloseableHttpClient closeableHttpClient = HttpClientBuilder.create().setConnectionManager(HTTP_CONNECTION_MANAGER).build();
         HTTP_CLIENT = new HttpRateLimitingClient(closeableHttpClient);
 	}
 	
