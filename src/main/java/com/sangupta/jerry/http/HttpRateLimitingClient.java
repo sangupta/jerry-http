@@ -47,6 +47,7 @@ import org.apache.http.protocol.HttpContext;
  * 
  * @since 0.3
  */
+@SuppressWarnings("deprecation")
 public class HttpRateLimitingClient implements HttpClient {
 	
 	/**
@@ -197,6 +198,7 @@ public class HttpRateLimitingClient implements HttpClient {
 	/**
 	 * @see org.apache.http.client.HttpClient#getParams()
 	 */
+	@Deprecated
 	@Override
 	public HttpParams getParams() {
 		return this.actualClient.getParams();
@@ -205,6 +207,7 @@ public class HttpRateLimitingClient implements HttpClient {
 	/**
 	 * @see org.apache.http.client.HttpClient#getConnectionManager()
 	 */
+	@Deprecated
 	@Override
 	public ClientConnectionManager getConnectionManager() {
 		return this.actualClient.getConnectionManager();
