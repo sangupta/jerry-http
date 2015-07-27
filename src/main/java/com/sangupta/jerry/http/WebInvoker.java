@@ -76,7 +76,7 @@ public class WebInvoker {
 	/**
 	 * My private logger
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(WebInvoker.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebInvoker.class);
 	
 	/**
 	 * Return the HTTP response body for a GET request to the given URL. In case
@@ -109,7 +109,7 @@ public class WebInvoker {
 		try {
 			return WebRequest.get(url).connectTimeout(CONNECTION_TIMEOUT).socketTimeout(SOCKET_TIMEOUT).cookiePolicy(cookiePolicy).execute().webResponse().getContent();
 		} catch(IOException e) {
-			logger.debug("Unable to fetch repsonse from url: {}", url, e);
+			LOGGER.debug("Unable to fetch repsonse from url: {}", url, e);
 		}
 		
 		return null;
@@ -146,7 +146,7 @@ public class WebInvoker {
 		try {
 			return WebRequest.get(url).connectTimeout(CONNECTION_TIMEOUT).socketTimeout(SOCKET_TIMEOUT).cookiePolicy(cookiePolicy).execute().webResponse();
 		} catch(Exception e) {
-			logger.debug("Unable to fetch repsonse from url: {}", url, e);
+			LOGGER.debug("Unable to fetch repsonse from url: {}", url, e);
 		}
 		
 		return null;
@@ -191,7 +191,7 @@ public class WebInvoker {
 			
 			return WebRequest.head(url).connectTimeout(CONNECTION_TIMEOUT).socketTimeout(SOCKET_TIMEOUT).cookiePolicy(cookiePolicy).noRedirects().execute().webResponse().getHeaders();
 		} catch(IOException e) {
-			logger.debug("Unable to fetch response headers from url: {}", url, e);
+			LOGGER.debug("Unable to fetch response headers from url: {}", url, e);
 		}
 		
 		return null;
@@ -236,7 +236,7 @@ public class WebInvoker {
 			
 			return WebRequest.head(url).connectTimeout(CONNECTION_TIMEOUT).socketTimeout(SOCKET_TIMEOUT).cookiePolicy(cookiePolicy).noRedirects().execute().webResponse();
 		} catch(IOException e) {
-			logger.debug("Unable to fetch response headers from url: {}", url, e);
+			LOGGER.debug("Unable to fetch response headers from url: {}", url, e);
 		}
 		
 		return null;
@@ -260,7 +260,7 @@ public class WebInvoker {
 		try {
 			return request.execute().webResponse();
 		} catch(IOException e) {
-			logger.debug("Unable to fetch repsonse from url: {}", uri, e);
+			LOGGER.debug("Unable to fetch repsonse from url: {}", uri, e);
 		}
 		
 		return null;
@@ -301,7 +301,7 @@ public class WebInvoker {
 		try {
 			return request.execute().webResponse();
 		} catch(IOException e) {
-			logger.debug("Unable to fetch repsonse from url: {}", uri, e);
+			LOGGER.debug("Unable to fetch repsonse from url: {}", uri, e);
 		}
 		
 		return null;
@@ -332,7 +332,7 @@ public class WebInvoker {
 		try {
 			return request.execute().webResponse();
 		} catch(IOException e) {
-			logger.debug("Unable to fetch repsonse from url: {}", uri, e);
+			LOGGER.debug("Unable to fetch repsonse from url: {}", uri, e);
 		}
 		
 		return null;
@@ -360,7 +360,7 @@ public class WebInvoker {
 		try {
 			return request.execute().webResponse();
 		} catch(IOException e) {
-			logger.debug("Unable to fetch repsonse from url: {}", uri, e);
+			LOGGER.debug("Unable to fetch repsonse from url: {}", uri, e);
 		}
 		
 		return null;
@@ -387,7 +387,7 @@ public class WebInvoker {
 		try {
 			return request.execute().webResponse();
 		} catch(IOException e) {
-			logger.debug("Unable to fetch repsonse from url: {}", uri, e);
+			LOGGER.debug("Unable to fetch repsonse from url: {}", uri, e);
 		}
 		
 		return null;
@@ -487,7 +487,7 @@ public class WebInvoker {
 		try {
 			return request.execute().webResponse();
 		} catch(Exception e) {
-			logger.debug("Unable to fetch repsonse from url: {}", request.getHttpRequest().getURI().toString(), e);	
+			LOGGER.debug("Unable to fetch repsonse from url: {}", request.getHttpRequest().getURI().toString(), e);	
 		}
 		
 		return null;
