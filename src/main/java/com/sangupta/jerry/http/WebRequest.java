@@ -289,7 +289,7 @@ public class WebRequest {
     private final HttpRequestBase request;
 
     /**
-     * The associated {@link HttpParams}
+     * A builder used to construct the request params
      */
     private final Builder requestConfigBuilder;
 
