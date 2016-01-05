@@ -61,6 +61,7 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
 
+import com.sangupta.jerry.constants.HttpHeaderName;
 import com.sangupta.jerry.util.StringUtils;
 
 /**
