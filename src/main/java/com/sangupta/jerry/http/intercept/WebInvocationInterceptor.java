@@ -19,7 +19,11 @@
  * 
  */
 
-package com.sangupta.jerry.http;
+package com.sangupta.jerry.http.intercept;
+
+import com.sangupta.jerry.http.WebInvoker;
+import com.sangupta.jerry.http.WebRequestMethod;
+import com.sangupta.jerry.http.WebResponse;
 
 /**
  * Contract for an interceptor that can be added to the {@link WebInvoker} utility

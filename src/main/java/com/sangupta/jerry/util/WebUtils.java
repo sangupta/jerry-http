@@ -42,7 +42,7 @@ public class WebUtils {
 	/**
 	 * My logger instance
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(WebUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebUtils.class);
 	
 	/**
 	 * Download the file at the given location URL and store it as a temporary
@@ -63,15 +63,15 @@ public class WebUtils {
 		File tempFile = File.createTempFile("download", extension);
 		tempFile.deleteOnExit();
 		
-		logger.debug("Downloading {} to {}", url, tempFile.getAbsolutePath());
+		LOGGER.debug("Downloading {} to {}", url, tempFile.getAbsolutePath());
 		
 		try {
 			WebRequest.get(url).execute().writeToFile(tempFile);
 			return tempFile;
 		} catch(HttpResponseException e) {
-			logger.error("HTTP response did not yield an OK status", e);
+			LOGGER.error("HTTP response did not yield an OK status", e);
 		} catch(IOException e) {
-			logger.error("Unable to download url to temp file", e);
+			LOGGER.error("Unable to download url to temp file", e);
 		}
 		
 		return null;
@@ -98,9 +98,9 @@ public class WebUtils {
 			WebRequest.get(url).execute().writeToFile(fileToDownloadIn);
 			return true;
 		} catch(HttpResponseException e) {
-			logger.error("HTTP response did not yield an OK status", e);
+			LOGGER.error("HTTP response did not yield an OK status", e);
 		} catch(IOException e) {
-			logger.error("Unable to download url to temp file", e);
+			LOGGER.error("Unable to download url to temp file", e);
 		}
 		
 		return false;
