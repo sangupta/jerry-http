@@ -1,5 +1,4 @@
-jerry-http
-==========
+# jerry-http
 
 Common Java functionality for working with HTTP requests. It hides the complexities of setting up
 and configuring the `Apache HTTP Client Library` in the code, and uses the same to make all requests.
@@ -10,18 +9,21 @@ wrapper functionality to work with HTTP requests using the Apache HTTP client li
 
 For more information on the project, refer to the uber https://github.com/sangupta/jerry project.
 
-Features
---------
+## Features
 
 * Make web requests without all the boiler plate code of the Apache HTTP Client Library
 * Use sensible defaults for connection/socket timeout and others
 * Adds mechanism for rate-limiting calls to an end-point or host
 * Many convenience methods to get request/response data
 * Deal with two standard POJO objects than deal with many Apache HC specific objects
-* 
 
-Usage
------
+
+## Breaking changes from version 1.0.0
+
+* `WebUtils` methods have now moved to `HttpService`
+ 
+
+## Usage
 
 `jerry-http` makes working with HTTP requests super easy. To fetch a response from the server, use,
 
@@ -55,8 +57,7 @@ if(response.isSuccess()) {
 Many other convenience methods are available in `WebInvoker` and `WebResponse` to deal with.
 
 
-Downloads
----------
+## Downloads
 
 The library can be downloaded from Maven Central using:
 
@@ -68,8 +69,7 @@ The library can be downloaded from Maven Central using:
 </dependency>
 ```
 
-Release Notes
--------------
+## Release Notes
 
 **1.0.0 (13 Nov 2014)**
 
@@ -105,8 +105,7 @@ Release Notes
 
 * Initial release after bifurcation from `jerry` project
 
-Versioning
-----------
+## Versioning
 
 For transparency and insight into our release cycle, and for striving to maintain backward compatibility, 
 `jerry-http` will be maintained under the Semantic Versioning guidelines as much as possible.
@@ -123,12 +122,11 @@ And constructed with the following guidelines:
 
 For more information on SemVer, please visit http://semver.org/.
 
-License
--------
+## License
 	
 ```
 jerry - Common Java Functionality
-Copyright (c) 2012-2014, Sandeep Gupta
+Copyright (c) 2012-2016, Sandeep Gupta
 
 http://sangupta.com/projects/jerry-http
 

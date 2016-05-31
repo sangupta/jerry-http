@@ -1,7 +1,7 @@
 /**
  *
  * jerry-http - Common Java Functionality
- * Copyright (c) 2012-2015, Sandeep Gupta
+ * Copyright (c) 2012-2016, Sandeep Gupta
  * 
  * http://sangupta.com/projects/jerry-http
  * 
@@ -21,7 +21,6 @@
 
 package com.sangupta.jerry.http.intercept;
 
-import com.sangupta.jerry.http.WebInvoker;
 import com.sangupta.jerry.http.WebRequestMethod;
 import com.sangupta.jerry.http.WebResponse;
 
