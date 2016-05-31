@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.sangupta.jerry.constants.HttpMimeType;
 import com.sangupta.jerry.http.WebRequest;
 import com.sangupta.jerry.http.WebRequestMethod;
 import com.sangupta.jerry.http.WebResponse;
@@ -43,26 +44,134 @@ import com.thoughtworks.xstream.XStream;
  */
 public interface HttpService {
 	
+	/**
+	 * Return the HTTP response body for a GET request to the given URL. In case
+	 * an {@link IOException} is thrown, it will be eaten up, logged at DEBUG
+	 * level, and <code>null</code> returned.
+	 * 
+	 * @param url
+	 *            the url to hit
+	 *            
+	 * @return the string response body
+	 */
 	public String getTextResponse(String url);
 	
+	/**
+	 * Return the {@link WebResponse} for a GET request to the given URL. In
+	 * case an {@link IOException} is thrown, it will be eaten up, logged at
+	 * DEBUG level, and <code>null</code> returned.
+	 * 
+	 * @param url
+	 *            the url to hit
+	 * 
+	 * @return the {@link WebResponse} obtained
+	 */
 	public WebResponse getWebResponse(String url);
 	
+	/**
+	 * Returns the HTTP headers etc by making a HEAD request to the given URL as
+	 * a {@link Map}.
+	 * 
+	 * @param url
+	 *            the url to hit
+	 * 
+	 * @return a {@link Map} of all header values
+	 */
 	public Map<String, String> getResponseHeaders(String url);
 
+	/**
+	 * Make a HEAD request to the URL and return the web response. 
+	 * 
+	 * @param url
+	 *            the url to hit
+	 * 
+	 * @return the {@link WebResponse} obtained
+	 */
 	public WebResponse doHEAD(String url);
 	
+	/**
+	 * Make a GET request to the URL and return the web response. 
+	 * 
+	 * @param url
+	 *            the url to hit
+	 * 
+	 * @return the {@link WebResponse} obtained
+	 */
 	public WebResponse doGET(String url);
 	
+	/**
+	 * Make a POST request to the URL and return the web response.
+	 * 
+	 * @param url
+	 *            the url to hit
+	 * 
+	 * @param requestBody
+	 *            the request body to set
+	 * 
+	 * @param mimeType
+	 *            the {@link HttpMimeType} for the request
+	 * 
+	 * @return the {@link WebResponse} obtained
+	 */
 	public WebResponse doPOST(String url, String requestBody, String mimeType);
 	
+	/**
+	 * Make a PUT request to the URL and return the web response.
+	 * 
+	 * @param url
+	 *            the url to hit
+	 * 
+	 * @param requestBody
+	 *            the request body to set
+	 * 
+	 * @param mimeType
+	 *            the {@link HttpMimeType} for the request
+	 * 
+	 * @return the {@link WebResponse} obtained
+	 */
 	public WebResponse doPUT(String url, String requestBody, String mimeType);
 	
+	/**
+	 * Make a DELETE request to the URL and return the web response. 
+	 * 
+	 * @param url
+	 *            the url to hit
+	 * 
+	 * @return the {@link WebResponse} obtained
+	 */
 	public WebResponse doDELETE(String url);
 	
+	/**
+	 * Make a OPTIONS request to the URL and return the web response. 
+	 * 
+	 * @param url
+	 *            the url to hit
+	 * 
+	 * @return the {@link WebResponse} obtained
+	 */
 	public WebResponse doOPTIONS(String url);
 	
+	/**
+	 * Make a TRACE request to the URL and return the web response. 
+	 * 
+	 * @param url
+	 *            the url to hit
+	 * 
+	 * @return the {@link WebResponse} obtained
+	 */
 	public WebResponse doTRACE(String url);
 
+	/**
+	 * Get the {@link WebRequest} object for the given {@link WebRequestMethod}.
+	 * 
+	 * @param method
+	 *            the HTTP VERB to be used
+	 * 
+	 * @param url
+	 *            the url to hit
+	 * 
+	 * @return the {@link WebRequest} instance for the request
+	 */
 	public WebRequest getWebRequest(WebRequestMethod method, String url);
 	
 	/**

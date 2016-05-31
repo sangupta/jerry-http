@@ -322,7 +322,7 @@ public class DefaultHttpServiceImpl implements HttpService {
 		LOGGER.debug("Downloading {} to {}", url, tempFile.getAbsolutePath());
 		
 		try {
-			WebRequest.get(url).execute().writeToFile(tempFile);
+			this.getWebRequest(WebRequestMethod.GET, url).execute().writeToFile(tempFile);
 			return tempFile;
 		} catch(HttpResponseException e) {
 			LOGGER.error("HTTP response did not yield an OK status", e);
@@ -336,7 +336,7 @@ public class DefaultHttpServiceImpl implements HttpService {
 	@Override
 	public boolean downloadToFile(String url, File fileToDownloadIn) throws IOException {
 		try {
-			WebRequest.get(url).execute().writeToFile(fileToDownloadIn);
+			this.getWebRequest(WebRequestMethod.GET, url).execute().writeToFile(fileToDownloadIn);
 			return true;
 		} catch(HttpResponseException e) {
 			LOGGER.error("HTTP response did not yield an OK status", e);
