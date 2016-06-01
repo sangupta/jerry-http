@@ -36,11 +36,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.utils.DateUtils;
+
+import com.sangupta.jerry.http.helper.HttpHelper;
 
 
 /**
@@ -371,11 +372,7 @@ public class WebResponse implements Serializable, Closeable {
 	 *             <code>null</code>
 	 */
     public void writeToFile(final File file) throws IOException {
-        if (this.responseCode >= 300) {
-            throw new HttpResponseException(this.responseCode, this.message);
-        }
-
-        FileUtils.writeByteArrayToFile(file, this.bytes);
+        HttpHelper.writeToFile(this, file);
     }
     
     // Usual accessor's follow

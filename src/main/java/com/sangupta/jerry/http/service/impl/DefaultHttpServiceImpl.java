@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
@@ -36,10 +35,10 @@ import com.sangupta.jerry.constants.HttpMimeType;
 import com.sangupta.jerry.http.WebRequest;
 import com.sangupta.jerry.http.WebRequestMethod;
 import com.sangupta.jerry.http.WebResponse;
+import com.sangupta.jerry.http.helper.HttpHelper;
 import com.sangupta.jerry.http.service.HttpService;
 import com.sangupta.jerry.util.DateUtils;
 import com.sangupta.jerry.util.GsonUtils;
-import com.sangupta.jerry.util.UriUtils;
 import com.sangupta.jerry.util.XStreamUtils;
 
 /**
@@ -257,42 +256,9 @@ public class DefaultHttpServiceImpl implements HttpService {
 	
 	@Override
 	public WebRequest getWebRequest(WebRequestMethod method, String uri) {
-		if(method == null) {
-			throw new IllegalArgumentException("WebRequestMethod cannot be null");
-		}
-		
-		WebRequest request = null;
-		switch(method) {
-			case DELETE:
-				request = WebRequest.delete(uri);
-				break;
-				
-			case GET:
-				request = WebRequest.get(uri);
-				break;
-				
-			case HEAD:
-				request = WebRequest.head(uri);
-				break;
-				
-			case OPTIONS:
-				request = WebRequest.options(uri);
-				break;
-				
-			case POST:
-				request = WebRequest.post(uri);
-				break;
-				
-			case PUT:
-				request = WebRequest.put(uri);
-				break;
-				
-			case TRACE:
-				request = WebRequest.trace(uri);
-				break;
-				
-			default:
-				throw new IllegalStateException("All options of enumeration have a check above, reaching this is impossible. This is a coding horror.");
+		WebRequest request = HttpHelper.getWebRequest(method, uri);
+		if(request == null) {
+			return null;
 		}
 		
 		request.connectTimeout(connectionTimeout).socketTimeout(socketTimeout).cookiePolicy(cookiePolicy);
@@ -315,36 +281,12 @@ public class DefaultHttpServiceImpl implements HttpService {
 	
 	@Override
 	public File downloadToTempFile(String url) throws IOException {
-		String extension = UriUtils.extractExtension(url);
-		File tempFile = File.createTempFile("download", extension);
-		tempFile.deleteOnExit();
-		
-		LOGGER.debug("Downloading {} to {}", url, tempFile.getAbsolutePath());
-		
-		try {
-			this.getWebRequest(WebRequestMethod.GET, url).execute().writeToFile(tempFile);
-			return tempFile;
-		} catch(HttpResponseException e) {
-			LOGGER.error("HTTP response did not yield an OK status", e);
-		} catch(IOException e) {
-			LOGGER.error("Unable to download url to temp file", e);
-		}
-		
-		return null;
+		return HttpHelper.downloadToTempFile(url, this);
 	}
 
 	@Override
 	public boolean downloadToFile(String url, File fileToDownloadIn) throws IOException {
-		try {
-			this.getWebRequest(WebRequestMethod.GET, url).execute().writeToFile(fileToDownloadIn);
-			return true;
-		} catch(HttpResponseException e) {
-			LOGGER.error("HTTP response did not yield an OK status", e);
-		} catch(IOException e) {
-			LOGGER.error("Unable to download url to temp file", e);
-		}
-		
-		return false;
+		return HttpHelper.downloadToFile(url, fileToDownloadIn, this);
 	}
 
 }
