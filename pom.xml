@@ -108,6 +108,24 @@
 				</configuration>
 			</plugin>
 
+			<!-- Report the coverage to coveralls -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<format>xml</format>
+					<maxmem>256m</maxmem>
+					<aggregate>true</aggregate>
+					<skip>false</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>3.1.0</version>
+			</plugin>
+
 			<!-- Generate the project-javadoc.jar for OSS repository -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
