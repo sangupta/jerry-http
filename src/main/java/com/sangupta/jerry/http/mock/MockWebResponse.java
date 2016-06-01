@@ -22,6 +22,7 @@
 package com.sangupta.jerry.http.mock;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 import com.sangupta.jerry.http.WebResponse;
 import com.sangupta.jerry.http.service.HttpService;
@@ -85,6 +86,11 @@ public class MockWebResponse extends WebResponse {
 		return this;
 	}
 	
+	public MockWebResponse setLastModified(long millis) {
+		this.lastModified = Long.valueOf(millis);
+		return this;
+	}
+	
 	/**
 	 * Set the content type to return
 	 * 
@@ -120,4 +126,44 @@ public class MockWebResponse extends WebResponse {
 		return this;
 	}
 	
+	@Override
+	public void close() {
+		// do nothing
+	}
+	
+	@Override
+	public int hashCode() {
+		if(this.bytes == null) {
+			return -1;
+		}
+		
+		return this.bytes.length;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) {
+			return false;
+		}
+		
+		if(this == obj) {
+			return true;
+		}
+		
+		if(!(obj instanceof WebResponse)) {
+			return false;
+		}
+		
+		WebResponse wr = (WebResponse) obj;
+		
+		if(this.bytes == null) {
+			if(wr.getBytes() == null) {
+				return true;
+			}
+			
+			return false;
+		}
+		
+		return Arrays.equals(bytes, wr.getBytes());
+	}
 }

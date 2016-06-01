@@ -1,4 +1,4 @@
-package com.sangupta.jerry.http;
+package com.sangupta.jerry.http.mock;
 
 import java.util.Map;
 
@@ -6,8 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.sangupta.jerry.constants.HttpMimeType;
-import com.sangupta.jerry.http.mock.MockHttpServiceImpl;
-import com.sangupta.jerry.http.mock.MockWebResponse;
+import com.sangupta.jerry.http.WebRequestMethod;
+import com.sangupta.jerry.http.WebResponse;
 import com.sangupta.jerry.util.ByteArrayUtils;
 import com.sangupta.jerry.util.HashUtils;
 
@@ -20,11 +20,11 @@ import com.sangupta.jerry.util.HashUtils;
  */
 public class TestMockHttpServiceImpl {
 	
-	private static final String SOME_TEST_URL = "http://localhost/someUrl";
+	private final String SOME_TEST_URL = "http://localhost/someUrl";
 
-	private static final int MAX_LENGTH = 1024;
+	private final int MAX_LENGTH = 1024;
 	
-	private static final String RANDOM_STRING = HashUtils.getMD5Hex(ByteArrayUtils.getRandomBytes(MAX_LENGTH));
+	private final String RANDOM_STRING = HashUtils.getMD5Hex(ByteArrayUtils.getRandomBytes(MAX_LENGTH));
 	
 	private final MockHttpServiceImpl service = new MockHttpServiceImpl();
 	

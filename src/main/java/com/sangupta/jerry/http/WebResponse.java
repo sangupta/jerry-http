@@ -71,7 +71,7 @@ public class WebResponse implements Serializable, Closeable {
     /**
      * The response body returned by the webservice invocation.
      */
-    private final byte[] bytes;
+    protected final byte[] bytes;
     
     /**
      * The charset of the content received
