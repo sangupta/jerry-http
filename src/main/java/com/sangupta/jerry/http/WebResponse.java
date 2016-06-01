@@ -23,6 +23,8 @@ package com.sangupta.jerry.http;
 
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -34,8 +36,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpHeaders;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.utils.DateUtils;
 
 
@@ -56,12 +60,12 @@ public class WebResponse implements Serializable, Closeable {
 	/**
      * The response code returned by the webservice invocation.
      */
-    int responseCode;
+    protected int responseCode;
     
     /**
      * The response message returned by the webservice invocation.
      */
-    String message;
+    protected String message;
     
     /**
      * The response body returned by the webservice invocation.
@@ -71,29 +75,29 @@ public class WebResponse implements Serializable, Closeable {
     /**
      * The charset of the content received
      */
-    Charset charSet;
+    protected Charset charSet;
     
     /**
      * The content-type as specified by the server
      */
-    String contentType;
+    protected String contentType;
     
     /**
      * The response headers received
      */
-    final Map<String, String> headers = new HashMap<String, String>();
+    protected final Map<String, String> headers = new HashMap<String, String>();
     
     /**
      * The redirect chain of {@link URI}s
      */
-    List<URI> redirectChain;
+    protected List<URI> redirectChain;
     
     /**
      * The size of the response
      */
-    long size;
+    protected long size;
     
-    WebResponse(String responseBody) {
+    protected WebResponse(String responseBody) {
     	if(responseBody == null) {
     		this.bytes = null;
     		this.size = 0;
@@ -346,6 +350,32 @@ public class WebResponse implements Serializable, Closeable {
     	
     	builder.append("]");
     	return builder.toString();
+    }
+    
+    /**
+	 * Write the response stream to the given file. If the HTTP status code is
+	 * greater than or equal to HTTP 300, an {@link HttpResponseException} is
+	 * thrown.
+	 * 
+	 * @param file
+	 *            the file to write the response to.
+	 * 
+	 * @throws IOException
+	 *             if something fails during HTTP connection
+	 * 
+	 * @throws HttpResponseException
+	 *             if the HTTP status code is greater than or equal to HTTP 300
+	 * 
+	 * @throws NullPointerException
+	 *             if the file to which the response needs to be written is
+	 *             <code>null</code>
+	 */
+    public void writeToFile(final File file) throws IOException {
+        if (this.responseCode >= 300) {
+            throw new HttpResponseException(this.responseCode, this.message);
+        }
+
+        FileUtils.writeByteArrayToFile(file, this.bytes);
     }
     
     // Usual accessor's follow
