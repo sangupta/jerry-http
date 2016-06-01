@@ -66,7 +66,7 @@ public interface HttpService {
 	 * 
 	 * @return the {@link WebResponse} obtained
 	 */
-	public WebResponse getWebResponse(String url);
+	public WebResponse getResponse(String url);
 	
 	/**
 	 * Returns the HTTP headers etc by making a HEAD request to the given URL as

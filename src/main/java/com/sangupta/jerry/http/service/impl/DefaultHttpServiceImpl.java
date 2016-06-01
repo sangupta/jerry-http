@@ -89,7 +89,7 @@ public class DefaultHttpServiceImpl implements HttpService {
 	}
 
 	@Override
-	public WebResponse getWebResponse(String url) {
+	public WebResponse getResponse(String url) {
 		try {
 			return this.getWebRequest(WebRequestMethod.GET, url).execute().webResponse();
 		} catch(Exception e) {

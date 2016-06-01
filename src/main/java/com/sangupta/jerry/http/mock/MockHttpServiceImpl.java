@@ -27,7 +27,10 @@ public class MockHttpServiceImpl implements HttpService {
 	
 	protected final AtomicReference<WebResponse> anyThreadReturnValue = new AtomicReference<>();
 	
-	private MockHttpServiceImpl() {
+	/**
+	 * Public constructor
+	 */
+	public MockHttpServiceImpl() {
 		this.nextReturnValue.set(new AtomicReference<WebResponse>());
 	}
 	
@@ -78,7 +81,7 @@ public class MockHttpServiceImpl implements HttpService {
 	}
 
 	@Override
-	public WebResponse getWebResponse(String url) {
+	public WebResponse getResponse(String url) {
 		return this.getResponse();
 	}
 
