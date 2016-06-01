@@ -24,6 +24,9 @@ package com.sangupta.jerry.http;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
@@ -90,12 +93,16 @@ public class HttpExecutor {
 	/**
 	 * Time after which the connection should be checked for validity
 	 */
-	private static final int VALIDATE_CONNECTION_AFTER_INACTIVITY_MILLIS = 1000;
+	private static final int VALIDATE_CONNECTION_AFTER_INACTIVITY_MILLIS = 1000; // 1 second
 	
 	/**
 	 * The singleton instance of HttpClient
 	 */
 	public static final HttpClient HTTP_CLIENT;
+	
+	private final List<HttpInvocationInterceptor> interceptors = new ArrayList<>();
+	
+	private final HttpInvocationInterceptorComparator interceptorComparator = new HttpInvocationInterceptorComparator();
 	
 	/**
 	 * Build up the default instance
@@ -354,6 +361,29 @@ public class HttpExecutor {
 	 *             if something fails
 	 */
 	public WebRawResponse execute(WebRequest webRequest) throws ClientProtocolException, IOException {
+		boolean interceptRequest = !this.interceptors.isEmpty();
+		if(!interceptRequest) {
+			return this.executeInternal(webRequest);
+		}
+		
+		for(HttpInvocationInterceptor interceptor : this.interceptors) {
+			WebResponse response = interceptor.beforeInvocation(webRequest);
+			if(response != null) {
+				return new HandledWebRawResponse(response);
+			}
+		}
+		
+		WebRawResponse response = this.executeInternal(webRequest);
+		WebResponse actualResponse = response.webResponse();
+		
+		for(HttpInvocationInterceptor interceptor : this.interceptors) {
+			actualResponse = interceptor.afterInvocation(actualResponse);
+		}
+		
+		return new HandledWebRawResponse(actualResponse);
+	}
+	
+	private WebRawResponse executeInternal(WebRequest webRequest) throws ClientProtocolException, IOException {
 		// sharing the context may lead to circular redirects in case
 		// of redirections from two request objects towards a single
 		// URI - like hitting http://google.com twice leads to circular
@@ -612,6 +642,45 @@ public class HttpExecutor {
 		HttpRoute route = new HttpRoute(new HttpHost(hostName, port));
 		setMaxConnectionsOnHost(route, numConnections);
 		return this;
+	}
+	
+	/**
+	 * Add a new {@link HttpInvocationInterceptor} to the {@link HttpExecutor}
+	 * instance. Note that the interceptor is added to only the given instance
+	 * of {@link HttpExecutor} - there may be other instances of
+	 * {@link HttpExecutor} which may run a {@link WebRequest} without these
+	 * interceptors.
+	 * 
+	 * @param interceptor
+	 *            the {@link HttpInvocationInterceptor} to add
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if interceptor is <code>null</code>
+	 */
+	public void addInvocationInterception(HttpInvocationInterceptor interceptor) {
+		if(interceptor == null) {
+			throw new IllegalArgumentException("HttpInvocationInterceptor cannot be null");
+		}
+		
+		this.interceptors.add(interceptor);
+		Collections.sort(this.interceptors, this.interceptorComparator);
+	}
+	
+	/**
+	 * Remove the instance of {@link HttpInvocationInterceptor} if added.
+	 * 
+	 * @param interceptor
+	 *            the {@link HttpInvocationInterceptor} to remove
+	 * 
+	 * @return <code>true</code> if interceptor was removed, <code>false</code>
+	 *         otherwise
+	 */
+	public boolean removeInvocationInterceptor(HttpInvocationInterceptor interceptor) {
+		if(interceptor == null) {
+			return false;
+		}
+		
+		return this.interceptors.remove(interceptor);
 	}
 	
 	// Finalization methods

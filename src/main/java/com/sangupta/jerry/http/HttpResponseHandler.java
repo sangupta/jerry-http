@@ -38,7 +38,7 @@ import org.apache.http.protocol.HttpContext;
  * @author sangupta
  * 
  */
-public interface HttpResponseHandler<T> {
+public interface HttpResponseHandler {
 
     /**
 	 * Processes an {@link HttpResponse} and returns some value corresponding to
@@ -55,6 +55,6 @@ public interface HttpResponseHandler<T> {
 	 * @throws IOException
 	 *             in case of a problem or the connection was aborted
 	 */
-    T handleResponse(HttpResponse response, HttpContext httpContext) throws ClientProtocolException, IOException;
+    WebResponse handleResponse(HttpResponse response, HttpContext httpContext) throws ClientProtocolException, IOException;
 
 }

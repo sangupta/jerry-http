@@ -47,7 +47,7 @@ import com.sangupta.jerry.util.AssertUtils;
  * 
  * @since 0.3
  */
-public class WebResponseHandler implements HttpResponseHandler<WebResponse> {
+public class WebResponseHandler implements HttpResponseHandler {
 
 	/**
 	 * @see org.apache.http.client.ResponseHandler#handleResponse(org.apache.http.HttpResponse)

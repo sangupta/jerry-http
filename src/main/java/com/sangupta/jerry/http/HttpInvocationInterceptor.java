@@ -19,10 +19,7 @@
  * 
  */
 
-package com.sangupta.jerry.http.intercept;
-
-import com.sangupta.jerry.http.WebRequestMethod;
-import com.sangupta.jerry.http.WebResponse;
+package com.sangupta.jerry.http;
 
 /**
  * Contract for an interceptor that can be added to the {@link WebInvoker} utility
@@ -31,37 +28,31 @@ import com.sangupta.jerry.http.WebResponse;
  * @author sangupta
  * @since 0.2.0
  */
-public interface WebInvocationInterceptor {
-
-	/**
-	 * Intercepting method that is invoked before each request of
-	 * {@link WebInvoker} is made thus providing a way to add hooks to modify
-	 * the request originating from somewhere else.
-	 * 
-	 * The URL provided here contains all query parameters that might have been
-	 * added. In case of POST requests the query parameters are not added.
-	 * 
-	 * @param url
-	 *            the URL whose invocation has been requested
-	 * 
-	 * @param method
-	 *            the HTTP verb for the invocation
-	 * 
-	 * @return a {@link WebResponse} object that may be returned back to the
-	 *         calling code if {@link #continueInvocation()} returns
-	 *         <code>false</code>. If {@link #continueInvocation()} returns
-	 *         <code>true</code>, the return value of this method is ignored.
-	 * 
-	 */
-	public WebResponse beforeInvocation(String url, WebRequestMethod method);
+public interface HttpInvocationInterceptor {
 	
 	/**
-	 * Indicates whether invocation should continue as per the original plan.
+	 * Return the priority of the interceptor. The higher the priority the
+	 * earlier it is executed in the interception chain.
 	 * 
-	 * @return <code>true<code> if invocation needs to be continues, <code>false</code>
-	 *         otherwise.
+	 * @return
 	 */
-	public boolean continueInvocation();
+	public int getPriority();
+
+	/**
+	 * Intercepting method that is invoked before each {@link WebRequest} is run
+	 * using the {@link HttpExecutor} - this provides a way to modify the
+	 * request prior to run, if needed.
+	 * 
+	 * @param request
+	 *            the {@link WebRequest} object
+	 * 
+	 * @return <code>null</code> if the execution chain should continue as if
+	 *         there was no interceptor. An instance of {@link WebResponse} will
+	 *         break the execution chain and the value will be returned to the
+	 *         callee.
+	 * 
+	 */
+	public WebResponse beforeInvocation(WebRequest request);
 	
 	/**
 	 * Intercepting method that is invoked after each request of

@@ -32,8 +32,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.ContentType;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
@@ -47,6 +45,8 @@ import org.apache.http.util.EntityUtils;
  * @since 0.3
  */
 public class WebRawResponse {
+	
+	private static final HttpResponseHandler DEFAULT_RESPONSE_HANDLER = new WebResponseHandler();
 
 	/**
 	 * Internal {@link HttpResponse} handle
@@ -131,10 +131,11 @@ public class WebRawResponse {
 	 *             if something fails
 	 * 
 	 */
-    public <T> T handleResponse(final HttpResponseHandler<T> handler) throws ClientProtocolException, IOException {
+    protected WebResponse handleResponse(HttpResponseHandler handler) throws ClientProtocolException, IOException {
         assertNotConsumed();
+        
         try {
-            return handler.handleResponse(this.response, this.localHttpContext);
+        	return handler.handleResponse(response, localHttpContext);
         } finally {
             dispose();
         }
@@ -153,31 +154,13 @@ public class WebRawResponse {
 	 *             if something fails
 	 */
     public WebResponse webResponse() throws ClientProtocolException, IOException {
-        return handleResponse(new WebResponseHandler());
-    }
-
-    /**
-	 * Return the {@link HttpResponse} object by reading the entire response
-	 * stream as byte-array.
-	 * 
-	 * @return the {@link HttpResponse} object
-	 * 
-	 * @throws IOException
-	 *             if something fails
-	 */
-    public HttpResponse httpResponse() throws IOException {
-        assertNotConsumed();
-        try {
-            HttpEntity entity = this.response.getEntity();
-            if (entity != null) {
-                this.response.setEntity(new ByteArrayEntity(EntityUtils.toByteArray(entity), ContentType.getOrDefault(entity)));
-            }
-            return this.response;
-        } finally {
-            this.consumed = true;
-        }
+        return handleResponse(DEFAULT_RESPONSE_HANDLER);
     }
     
+    public WebResponse webResponse(HttpResponseHandler handler) throws ClientProtocolException, IOException {
+        return handleResponse(handler);
+    }
+
     /**
 	 * Write the response stream to the given file. If the HTTP status code is
 	 * greater than or equal to HTTP 300, an {@link HttpResponseException} is
@@ -214,4 +197,5 @@ public class WebRawResponse {
             bout.close();
         }
     }
+    
 }

@@ -66,7 +66,7 @@ public class WebResponse implements Serializable, Closeable {
     /**
      * The response body returned by the webservice invocation.
      */
-    private byte[] bytes;
+    private final byte[] bytes;
     
     /**
      * The charset of the content received
@@ -92,6 +92,17 @@ public class WebResponse implements Serializable, Closeable {
      * The size of the response
      */
     long size;
+    
+    WebResponse(String responseBody) {
+    	if(responseBody == null) {
+    		this.bytes = null;
+    		this.size = 0;
+    		return;
+    	}
+    	
+    	this.bytes = responseBody.getBytes();
+    	this.size = this.bytes.length;
+	}
     
     public WebResponse(byte[] bytes) {
     	this.bytes = bytes;
