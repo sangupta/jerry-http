@@ -31,7 +31,11 @@ public class MockHttpServiceImpl implements HttpService {
 	 * Public constructor
 	 */
 	public MockHttpServiceImpl() {
-		this.nextReturnValue.set(new AtomicReference<WebResponse>());
+		AtomicReference<WebResponse> reference = new AtomicReference<WebResponse>();
+		reference.set(SENTINEL_RESPONSE);
+		this.nextReturnValue.set(reference);
+		
+		this.anyThreadReturnValue.set(SENTINEL_RESPONSE);
 	}
 	
 	// METHODS FOR MOCKING
