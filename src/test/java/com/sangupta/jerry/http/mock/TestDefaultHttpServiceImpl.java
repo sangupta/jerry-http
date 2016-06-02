@@ -9,18 +9,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.sangupta.jerry.constants.HttpHeaderName;
 import com.sangupta.jerry.constants.HttpMimeType;
+import com.sangupta.jerry.http.WebRequest;
+import com.sangupta.jerry.http.WebRequestMethod;
 import com.sangupta.jerry.http.WebResponse;
 import com.sangupta.jerry.http.service.HttpService;
 import com.sangupta.jerry.http.service.impl.DefaultHttpServiceImpl;
 import com.sangupta.jerry.util.ByteArrayUtils;
+import com.sangupta.jerry.util.GsonUtils;
 import com.sangupta.jerry.util.HashUtils;
+import com.sangupta.jerry.util.XStreamUtils;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -54,6 +60,11 @@ public class TestDefaultHttpServiceImpl {
 		server.createContext("/hit", handler);
 		server.setExecutor(null); // creates a default executor
 		server.start();
+	}
+	
+	@AfterClass
+	public static void shutdown() {
+		server.stop(0); // 300 seconds, 5 minutes
 	}
 	
 	@After
@@ -103,116 +114,156 @@ public class TestDefaultHttpServiceImpl {
 		Assert.assertNotNull(result.getHeaders());
 		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
 	}
-//	
-//	@Test
-//	public void testDoGET() {
-//		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
-//		response.addHeader(RANDOM_STRING, RANDOM_STRING);
-//		service.setNextResponse(response);
-//		WebResponse result = service.doGET(LOCAL_URL);
-//		
-//		Assert.assertNotNull(result);
-//		Assert.assertEquals(response, result);
-//	}
-//	
-//	@Test
-//	public void testDoPOST() {
-//		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
-//		response.addHeader(RANDOM_STRING, RANDOM_STRING);
-//		service.setNextResponse(response);
-//		WebResponse result = service.doPOST(LOCAL_URL, RANDOM_STRING, HttpMimeType.BINARY);
-//		
-//		Assert.assertNotNull(result);
-//		Assert.assertEquals(response, result);
-//	}
-//	
-//	@Test
-//	public void testDoPUT() {
-//		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
-//		response.addHeader(RANDOM_STRING, RANDOM_STRING);
-//		service.setNextResponse(response);
-//		WebResponse result = service.doPUT(LOCAL_URL, RANDOM_STRING, HttpMimeType.BINARY);
-//		
-//		Assert.assertNotNull(result);
-//		Assert.assertEquals(response, result);
-//	}
-//	
-//	@Test
-//	public void testDoOPTIONS() {
-//		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
-//		response.addHeader(RANDOM_STRING, RANDOM_STRING);
-//		service.setNextResponse(response);
-//		WebResponse result = service.doOPTIONS(LOCAL_URL);
-//		
-//		Assert.assertNotNull(result);
-//		Assert.assertEquals(response, result);
-//	}
-//	
-//	@Test
-//	public void testDoTRACE() {
-//		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
-//		response.addHeader(RANDOM_STRING, RANDOM_STRING);
-//		service.setNextResponse(response);
-//		WebResponse result = service.doTRACE(LOCAL_URL);
-//		
-//		Assert.assertNotNull(result);
-//		Assert.assertEquals(response, result);
-//	}
-//	
-//	@Test
-//	public void testDoDELETE() {
-//		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
-//		response.addHeader(RANDOM_STRING, RANDOM_STRING);
-//		service.setNextResponse(response);
-//		WebResponse result = service.doDELETE(LOCAL_URL);
-//		
-//		Assert.assertNotNull(result);
-//		Assert.assertEquals(response, result);
-//	}
-//	
-//	@Test
-//	public void testPostXML() {
-//		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
-//		response.addHeader(RANDOM_STRING, RANDOM_STRING);
-//		service.setNextResponse(response);
-//		WebResponse result = service.postXML(LOCAL_URL, RANDOM_STRING);
-//		
-//		Assert.assertNotNull(result);
-//		Assert.assertEquals(response, result);
-//	}
-//	
-//	@Test
-//	public void testPostJSONL() {
-//		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
-//		response.addHeader(RANDOM_STRING, RANDOM_STRING);
-//		service.setNextResponse(response);
-//		WebResponse result = service.postJSON(LOCAL_URL, RANDOM_STRING);
-//		
-//		Assert.assertNotNull(result);
-//		Assert.assertEquals(response, result);
-//	}
-//	
-//	@Test
-//	public void testExecuteSilently() {
-//		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
-//		response.addHeader(RANDOM_STRING, RANDOM_STRING);
-//		service.setNextResponse(response);
-//		WebResponse result = service.executeSilently(service.getWebRequest(WebRequestMethod.GET, LOCAL_URL));
-//		
-//		Assert.assertNotNull(result);
-//		Assert.assertEquals(response, result);
-//	}
-//	
-//	@Test
-//	public void testPlainExecuteSilently() {
-//		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
-//		response.addHeader(RANDOM_STRING, RANDOM_STRING);
-//		service.setNextResponse(response);
-//		WebResponse result = service.plainExecuteSilently(service.getWebRequest(WebRequestMethod.GET, LOCAL_URL));
-//		
-//		Assert.assertNotNull(result);
-//		Assert.assertEquals(response, result);
-//	}
+	
+	@Test
+	public void testDoGET() {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
+
+		WebResponse result = service.doGET(LOCAL_URL);
+		
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getContent());
+		Assert.assertEquals(RANDOM_STRING, result.getContent());
+		Assert.assertNotNull(result.getHeaders());
+		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
+	}
+	
+	@Test
+	public void testDoPOST() {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
+		handler.checkBody(RANDOM_STRING);
+		handler.checkMethod(WebRequestMethod.POST);
+		
+		WebResponse result = service.doPOST(LOCAL_URL, RANDOM_STRING, HttpMimeType.BINARY);
+		
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getContent());
+		Assert.assertEquals(RANDOM_STRING, result.getContent());
+		Assert.assertNotNull(result.getHeaders());
+		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
+	}
+	
+	@Test
+	public void testDoPUT() {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
+		handler.checkBody(RANDOM_STRING);
+		handler.checkMethod(WebRequestMethod.PUT);
+		
+		WebResponse result = service.doPUT(LOCAL_URL, RANDOM_STRING, HttpMimeType.BINARY);
+		
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getContent());
+		Assert.assertEquals(RANDOM_STRING, result.getContent());
+		Assert.assertNotNull(result.getHeaders());
+		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
+	}
+	
+	@Test
+	public void testDoOPTIONS() {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
+
+		WebResponse result = service.doOPTIONS(LOCAL_URL);
+		
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getContent());
+		Assert.assertEquals(RANDOM_STRING, result.getContent());
+		Assert.assertNotNull(result.getHeaders());
+		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
+	}
+	
+	@Test
+	public void testDoTRACE() {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
+
+		WebResponse result = service.doTRACE(LOCAL_URL);
+		
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getContent());
+		Assert.assertEquals(RANDOM_STRING, result.getContent());
+		Assert.assertNotNull(result.getHeaders());
+		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
+	}
+	
+	@Test
+	public void testDoDELETE() {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
+
+		WebResponse result = service.doDELETE(LOCAL_URL);
+		
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getContent());
+		Assert.assertEquals(RANDOM_STRING, result.getContent());
+		Assert.assertNotNull(result.getHeaders());
+		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
+	}
+	
+	@Test
+	public void testPostXML() {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
+		handler.checkBody(XStreamUtils.getXStream().toXML(RANDOM_STRING));
+		handler.checkMethod(WebRequestMethod.POST);
+		
+		WebResponse result = service.postXML(LOCAL_URL, RANDOM_STRING);
+		
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getContent());
+		Assert.assertEquals(RANDOM_STRING, result.getContent());
+		Assert.assertNotNull(result.getHeaders());
+		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
+	}
+	
+	@Test
+	public void testPostJSONL() {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
+		handler.checkBody(GsonUtils.getGson().toJson(RANDOM_STRING));
+		handler.checkMethod(WebRequestMethod.POST);
+		
+		WebResponse result = service.postJSON(LOCAL_URL, RANDOM_STRING);
+		
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getContent());
+		Assert.assertEquals(RANDOM_STRING, result.getContent());
+		Assert.assertNotNull(result.getHeaders());
+		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
+	}
+	
+	@Test
+	public void testExecuteSilently() {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
+
+		WebRequest request = service.getWebRequest(WebRequestMethod.GET, LOCAL_URL);
+		WebResponse result = service.executeSilently(request);
+		
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getContent());
+		Assert.assertEquals(RANDOM_STRING, result.getContent());
+		Assert.assertNotNull(result.getHeaders());
+		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));		
+	}
+	
+	@Test
+	public void testPlainExecuteSilently() {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
+
+		WebRequest request = service.getWebRequest(WebRequestMethod.GET, LOCAL_URL);
+		WebResponse result = service.plainExecuteSilently(request);
+		
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getContent());
+		Assert.assertEquals(RANDOM_STRING, result.getContent());
+		Assert.assertNotNull(result.getHeaders());
+		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
+	}
 	
 	static class MyHandler implements HttpHandler {
 		
@@ -221,6 +272,10 @@ public class TestDefaultHttpServiceImpl {
 		private String body = null;
 		
 		private final Map<String, String> headers = new HashMap<>();
+		
+		private String bodyToCheck;
+		
+		private WebRequestMethod method;
         
 		@Override
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -232,16 +287,40 @@ public class TestDefaultHttpServiceImpl {
             	}
             }
             
-            if(httpExchange.getRequestMethod().equalsIgnoreCase("head")) {
-            	httpExchange.sendResponseHeaders(this.responseCode, 0);
-            } else {
-            	httpExchange.sendResponseHeaders(this.responseCode, this.body.length());
-            	
-                OutputStream os = httpExchange.getResponseBody();
-                os.write(this.body.getBytes());
-                os.close();
+            String method = httpExchange.getRequestMethod();
+            if(this.method != null) {
+            	if(!this.method.toString().equalsIgnoreCase(method)) {
+            		httpExchange.sendResponseHeaders(-1, 0);
+            		return;
+            	}
             }
+            
+            if(method.equalsIgnoreCase("head")) {
+            	httpExchange.sendResponseHeaders(this.responseCode, 0);
+            	return;
+            }
+            
+            if(this.bodyToCheck != null) {
+            	String myBody = IOUtils.toString(httpExchange.getRequestBody());
+            	if(!this.bodyToCheck.equals(myBody)) {
+            		httpExchange.sendResponseHeaders(-1, 0);
+            	}
+            }
+        	
+            httpExchange.sendResponseHeaders(this.responseCode, this.body.length());
+        	
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(this.body.getBytes());
+            os.close();
         }
+
+		public void checkMethod(WebRequestMethod method) {
+			this.method = method;
+		}
+
+		public void checkBody(String body) {
+			this.bodyToCheck = body;
+		}
 
 		public void setResponse(int responseCode, String message) {
 			this.responseCode = responseCode;
@@ -256,6 +335,8 @@ public class TestDefaultHttpServiceImpl {
 			this.responseCode = -1;
 			this.body = null;
 			this.headers.clear();
+			this.bodyToCheck = null;
+			this.method = null;
 		}
 		
 		private void addHeader(HttpExchange httpExchange, String name, String value) {

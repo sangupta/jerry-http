@@ -236,7 +236,7 @@ public class DefaultHttpServiceImpl implements HttpService {
 			request.followRedirects();
 		}
 		
-		return this.executeSilently(request);
+		return this.plainExecuteSilently(request);
 	}
 	
 	@Override
