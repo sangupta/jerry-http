@@ -1,5 +1,9 @@
 # jerry-http
 
+[![Build Status](https://travis-ci.org/sangupta/jerry-http.svg?branch=master)](https://travis-ci.org/sangupta/jerry-http)
+[![Coverage Status](https://coveralls.io/repos/github/sangupta/jerry-http/badge.svg?branch=master)](https://coveralls.io/github/sangupta/jerry-http?branch=master)
+[![Maven Version](https://maven-badges.herokuapp.com/maven-central/com.sangupta/jerry-http/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.sangupta/jerry-http)
+
 Common Java functionality for working with HTTP requests. It hides the complexities of setting up
 and configuring the `Apache HTTP Client Library` in the code, and uses the same to make all requests.
 This helps reduce a lot of boiler-plate code, as you can get started from the word `go`.
