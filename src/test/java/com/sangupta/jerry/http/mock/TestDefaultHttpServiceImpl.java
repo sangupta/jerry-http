@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.sangupta.jerry.constants.HttpHeaderName;
+import com.sangupta.jerry.constants.HttpMimeType;
 import com.sangupta.jerry.http.WebResponse;
 import com.sangupta.jerry.http.service.HttpService;
 import com.sangupta.jerry.http.service.impl.DefaultHttpServiceImpl;
@@ -38,7 +40,8 @@ public class TestDefaultHttpServiceImpl {
 	
 	private static final String LOCAL_URL = "http://localhost:8080/hit";
 	
-	private final String RANDOM_STRING = HashUtils.getMD5Hex(ByteArrayUtils.getRandomBytes(1024));
+	// prefix with one to take care of case-change during header transmission
+	private final String RANDOM_STRING = "1" + HashUtils.getMD5Hex(ByteArrayUtils.getRandomBytes(1024));
 	
 	private final HttpService service = new DefaultHttpServiceImpl();
 	
@@ -53,9 +56,13 @@ public class TestDefaultHttpServiceImpl {
 		server.start();
 	}
 	
+	@After
+	public void tearDown() {
+		handler.clear();
+	}
+	
 	@Test
 	public void testGetTextResponse() {
-		handler.clear();
 		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
 		
 		String response = service.getTextResponse(LOCAL_URL);
@@ -64,7 +71,6 @@ public class TestDefaultHttpServiceImpl {
 	
 	@Test
 	public void testGetResponse() {
-		handler.clear();
 		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
 		WebResponse result = service.getResponse(LOCAL_URL);
 		
@@ -76,21 +82,17 @@ public class TestDefaultHttpServiceImpl {
 
 	@Test
 	public void testGetResponseHeaders() {
-		handler.clear();
 		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
 		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
 		
 		Map<String, String> result = service.getResponseHeaders(LOCAL_URL);
 		
 		Assert.assertNotNull(result);
-		Assert.assertEquals(2, result.size());
-		
 		Assert.assertEquals(RANDOM_STRING, result.get(RANDOM_STRING));
 	}
 	
 	@Test
 	public void testDoHEAD() {
-		handler.clear();
 		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
 		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
 
@@ -99,7 +101,6 @@ public class TestDefaultHttpServiceImpl {
 		Assert.assertNotNull(result);
 		Assert.assertNull(result.getContent());
 		Assert.assertNotNull(result.getHeaders());
-		Assert.assertEquals(2, result.getHeaders().size());
 		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
 	}
 //	
@@ -223,19 +224,23 @@ public class TestDefaultHttpServiceImpl {
         
 		@Override
         public void handle(HttpExchange httpExchange) throws IOException {
+			this.addHeader(httpExchange, HttpHeaderName.CONTENT_TYPE, HttpMimeType.BINARY);
+			
             if(!this.headers.isEmpty()) {
             	for(Entry<String, String> entry : this.headers.entrySet()) {
-            		List<String> list = new ArrayList<>();
-            		list.add(entry.getValue());
-            		httpExchange.getResponseHeaders().put(entry.getKey(), list);
+            		this.addHeader(httpExchange, entry.getKey(), entry.getValue());
             	}
             }
             
-            httpExchange.sendResponseHeaders(this.responseCode, this.body.length());
-            
-            OutputStream os = httpExchange.getResponseBody();
-            os.write(this.body.getBytes());
-            os.close();
+            if(httpExchange.getRequestMethod().equalsIgnoreCase("head")) {
+            	httpExchange.sendResponseHeaders(this.responseCode, 0);
+            } else {
+            	httpExchange.sendResponseHeaders(this.responseCode, this.body.length());
+            	
+                OutputStream os = httpExchange.getResponseBody();
+                os.write(this.body.getBytes());
+                os.close();
+            }
         }
 
 		public void setResponse(int responseCode, String message) {
@@ -251,6 +256,12 @@ public class TestDefaultHttpServiceImpl {
 			this.responseCode = -1;
 			this.body = null;
 			this.headers.clear();
+		}
+		
+		private void addHeader(HttpExchange httpExchange, String name, String value) {
+			List<String> list = new ArrayList<>();
+    		list.add(value);
+    		httpExchange.getResponseHeaders().put(name, list);
 		}
     }
 	
