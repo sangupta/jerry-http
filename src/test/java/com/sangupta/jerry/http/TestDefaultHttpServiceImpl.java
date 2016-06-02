@@ -1,4 +1,4 @@
-package com.sangupta.jerry.http.mock;
+package com.sangupta.jerry.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
