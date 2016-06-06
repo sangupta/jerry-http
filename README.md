@@ -75,6 +75,13 @@ The library can be downloaded from Maven Central using:
 
 ## Release Notes
 
+**2.0.0 (in development)**
+
+* Better API structuring
+* Align for loose coupling and easy unit-testing
+* Upgraded HttpClient library
+* A few bug fixes
+
 **1.0.0 (13 Nov 2014)**
 
 * Move to 1.0.0 release as library is quite stable now
