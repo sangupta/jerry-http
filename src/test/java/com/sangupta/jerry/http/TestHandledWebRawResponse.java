@@ -32,6 +32,10 @@ public class TestHandledWebRawResponse {
 		hwrr.writeToFile(file);
 		Assert.assertEquals("hello", FileUtils.readFileToString(file));
 		
+		hwrr = new HandledWebRawResponse(new MockWebResponse(null));
+		hwrr.writeToFile(file);
+		Assert.assertEquals("", FileUtils.readFileToString(file));
+		
 		FileUtils.deleteQuietly(file);
 	}
 	

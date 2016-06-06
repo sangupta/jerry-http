@@ -62,7 +62,7 @@ public class WebRawResponse {
 	 * Flag that signifies if the response stream has been consumed
 	 * or not.
 	 */
-    private boolean consumed;
+    private volatile boolean consumed;
 
     /**
 	 * Constructor that takes a {@link HttpResponse} object and stores it
@@ -197,5 +197,12 @@ public class WebRawResponse {
             bout.close();
         }
     }
+
+	/**
+	 * @return the consumed
+	 */
+	public boolean isConsumed() {
+		return consumed;
+	}
     
 }

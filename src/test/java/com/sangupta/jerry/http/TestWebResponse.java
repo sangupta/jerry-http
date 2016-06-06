@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import org.apache.commons.io.IOUtils;
@@ -26,17 +27,18 @@ public class TestWebResponse {
 		String data = "0" + HashUtils.getMD5Hex(ByteArrayUtils.getRandomBytes(1024));
 		WebResponse response = new WebResponse(data);
 		
+		// content
 		byte[] bytes = data.getBytes();
 		Assert.assertArrayEquals(bytes, response.asBytes());
-		
 		Assert.assertArrayEquals(bytes, response.asClonedBytes());
-		
 		Assert.assertEquals(data, response.getContent());
-		
+
 		InputStream stream = response.asStream();
 		Assert.assertNotNull(stream);
 
 		Assert.assertArrayEquals(bytes, IOUtils.toByteArray(stream));
+		
+		Assert.assertEquals(data, response.asContent(Charset.defaultCharset()));
 		
 		// response code
 		response.responseCode = 200;
@@ -97,5 +99,13 @@ public class TestWebResponse {
 		response.redirectChain = new ArrayList<>();
 		Assert.assertFalse(response.hasRedirects());
 		Assert.assertNull(response.getFinalURI());
+	}
+	
+	@Test
+	public void testEmpty() {
+		WebResponse response = new WebResponse((byte[]) null);
+		Assert.assertNull(response.asStream());
+		Assert.assertNull(response.asClonedBytes());
+		Assert.assertNull(response.getHeaders().get("temp"));
 	}
 }

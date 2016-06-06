@@ -304,10 +304,6 @@ public class WebResponse implements Serializable {
 	 *         present
 	 */
     private String getHeader(String headerName) {
-    	if(headers == null) {
-    		return null;
-    	}
-    	
     	return headers.get(headerName);
     }
     
