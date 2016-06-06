@@ -3,6 +3,7 @@ package com.sangupta.jerry.http;
 import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,5 +82,25 @@ public class TestDefaultHttpServiceImplExceptions {
 		Assert.assertEquals(200, request.getHttpRequest().getConfig().getConnectTimeout());
 		Assert.assertEquals(300, request.getHttpRequest().getConfig().getSocketTimeout());
 		
+	}
+	
+	@Test
+	public void testNullRequestExecute() {
+		try {
+			this.service.plainExecuteSilently(null);
+			Assert.assertTrue(false);
+		} catch(IllegalArgumentException e) {
+			Assert.assertTrue(true);
+		}
+		
+		WebResponse response = this.service.plainExecuteSilently(new WebRequest(new HttpGet("http://localhost/hit")) {
+			
+			@Override
+			public WebRawResponse execute() throws ClientProtocolException, IOException {
+				throw new IOException();
+			}
+			
+		});
+		Assert.assertNull(response);
 	}
 }
