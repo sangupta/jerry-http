@@ -134,10 +134,10 @@ public class DefaultHttpServiceImpl implements HttpService {
 
 	@Override
 	public WebResponse doPOST(String url, String requestBody, String mimeType) {
-		WebRequest request = this.getWebRequest(WebRequestMethod.POST, url);
-		request.bodyString(requestBody, ContentType.create(mimeType));
-		
 		try {
+			WebRequest request = this.getWebRequest(WebRequestMethod.POST, url);
+			request.bodyString(requestBody, ContentType.create(mimeType));
+			
 			return request.execute().webResponse();
 		} catch(IOException e) {
 			LOGGER.debug("Unable to fetch repsonse from url: {}", url, e);
@@ -148,10 +148,10 @@ public class DefaultHttpServiceImpl implements HttpService {
 
 	@Override
 	public WebResponse doPUT(String url, String requestBody, String mimeType) {
-		WebRequest request = this.getWebRequest(WebRequestMethod.PUT, url);
-		request.bodyString(requestBody, ContentType.create(mimeType));
-		
 		try {
+			WebRequest request = this.getWebRequest(WebRequestMethod.PUT, url);
+			request.bodyString(requestBody, ContentType.create(mimeType));
+			
 			return request.execute().webResponse();
 		} catch(IOException e) {
 			LOGGER.debug("Unable to fetch repsonse from url: {}", url, e);
@@ -195,12 +195,12 @@ public class DefaultHttpServiceImpl implements HttpService {
 
 	@Override
 	public WebResponse postXML(String url, Object object) {
-		WebRequest request = this.getWebRequest(WebRequestMethod.POST, url);
-		
-		String requestBody = XStreamUtils.getXStream(object.getClass()).toXML(object);
-		request.bodyString(requestBody, ContentType.create(HttpMimeType.XML));
-		
 		try {
+			WebRequest request = this.getWebRequest(WebRequestMethod.POST, url);
+			
+			String requestBody = XStreamUtils.getXStream(object.getClass()).toXML(object);
+			request.bodyString(requestBody, ContentType.create(HttpMimeType.XML));
+			
 			return request.execute().webResponse();
 		} catch(IOException e) {
 			LOGGER.debug("Unable to fetch repsonse from url: {}", url, e);
@@ -211,12 +211,12 @@ public class DefaultHttpServiceImpl implements HttpService {
 
 	@Override
 	public WebResponse postJSON(String url, Object object) {
-		WebRequest request = this.getWebRequest(WebRequestMethod.POST, url);
-		
-		String requestBody = GsonUtils.getGson().toJson(object);
-		request.bodyString(requestBody, ContentType.create(HttpMimeType.JSON));
-		
 		try {
+			WebRequest request = this.getWebRequest(WebRequestMethod.POST, url);
+			
+			String requestBody = GsonUtils.getGson().toJson(object);
+			request.bodyString(requestBody, ContentType.create(HttpMimeType.JSON));
+			
 			return request.execute().webResponse();
 		} catch(IOException e) {
 			LOGGER.debug("Unable to fetch repsonse from url: {}", url, e);
