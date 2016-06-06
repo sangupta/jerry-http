@@ -15,7 +15,7 @@ import com.sangupta.jerry.constants.HttpMimeType;
  * @author sangupta
  *
  */
-public class TestWebRequest {
+class TestWebRequest {
 
 	@Test
 	public void testRequest() throws URISyntaxException {

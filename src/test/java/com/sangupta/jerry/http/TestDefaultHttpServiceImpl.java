@@ -37,7 +37,7 @@ import com.sun.net.httpserver.HttpServer;
  *
  */
 @SuppressWarnings("restriction")
-public class TestDefaultHttpServiceImpl {
+class TestDefaultHttpServiceImpl {
 	
 	private static HttpServer server;
 	

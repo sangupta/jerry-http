@@ -18,7 +18,7 @@ import com.sangupta.jerry.unsafe.UnsafeMemory;
  * @author sangupta
  *
  */
-public class TestDefaultHttpServiceImplExceptions {
+class TestDefaultHttpServiceImplExceptions {
 	
 	private static final String LOCAL_URL = "http://localhost:8080/hit";
 	

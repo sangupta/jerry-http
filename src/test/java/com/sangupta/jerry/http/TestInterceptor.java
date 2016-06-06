@@ -15,7 +15,7 @@ import com.sangupta.jerry.http.service.impl.DefaultHttpServiceImpl;
  * @author sangupta
  *
  */
-public class TestInterceptor {
+class TestInterceptor {
 	
 	@Test
 	public void testInterception() {

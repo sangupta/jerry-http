@@ -18,7 +18,7 @@ import com.sangupta.jerry.util.HashUtils;
  * @author sangupta
  *
  */
-public class TestMockHttpServiceImplAnyThread {
+class TestMockHttpServiceImplAnyThread {
 	
 	private final String SOME_TEST_URL = "http://localhost/someUrl";
 

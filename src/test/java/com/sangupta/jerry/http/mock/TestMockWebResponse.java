@@ -9,7 +9,13 @@ import org.junit.Test;
 import com.sangupta.jerry.util.ByteArrayUtils;
 import com.sangupta.jerry.util.HashUtils;
 
-public class TestMockWebResponse {
+/**
+ * Unit tests for {@link MockWebResponse} class.
+ * 
+ * @author sangupta
+ *
+ */
+class TestMockWebResponse {
 
 	private final int MAX_LENGTH = 1024;
 	

@@ -17,7 +17,7 @@ import com.sangupta.jerry.http.service.impl.DefaultHttpServiceImpl;
  * @author sangupta
  *
  */
-public class TestRateLimiting {
+class TestRateLimiting {
 	
 	@AfterClass
 	public static void cleanUp() {

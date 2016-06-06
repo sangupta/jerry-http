@@ -11,7 +11,7 @@ import org.junit.Test;
  * @author sangupta
  *
  */
-public class TestHttpInvocationInterceptorComparator {
+class TestHttpInvocationInterceptorComparator {
 
 	@Test
 	public void testComparator() {

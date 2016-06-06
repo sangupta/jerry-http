@@ -13,7 +13,7 @@ import org.junit.Test;
  * @author sangupta
  *
  */
-public class TestWebForm {
+class TestWebForm {
 
 	@Test
 	public void testEmptyForm() {
