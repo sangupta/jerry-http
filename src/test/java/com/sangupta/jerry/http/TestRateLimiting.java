@@ -2,6 +2,7 @@ package com.sangupta.jerry.http;
 
 import java.util.concurrent.TimeUnit;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,6 +16,11 @@ import com.sangupta.jerry.http.service.impl.DefaultHttpServiceImpl;
  *
  */
 public class TestRateLimiting {
+	
+	@AfterClass
+	public void cleanUp() {
+		HttpExecutor.DEFAULT.removeAllRateLimiting();
+	}
 
 	@Test
 	public void testRateLimiting() {
