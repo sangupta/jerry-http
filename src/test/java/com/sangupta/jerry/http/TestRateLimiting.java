@@ -18,7 +18,7 @@ import com.sangupta.jerry.http.service.impl.DefaultHttpServiceImpl;
 public class TestRateLimiting {
 	
 	@AfterClass
-	public void cleanUp() {
+	public static void cleanUp() {
 		HttpExecutor.DEFAULT.removeAllRateLimiting();
 	}
 
