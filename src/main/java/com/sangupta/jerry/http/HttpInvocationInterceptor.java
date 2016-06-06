@@ -21,6 +21,8 @@
 
 package com.sangupta.jerry.http;
 
+import java.io.IOException;
+
 /**
  * Contract for an interceptor that can be added to the {@link WebInvoker} utility
  * classes to add hooks before and after invocation.
@@ -64,8 +66,11 @@ public interface HttpInvocationInterceptor {
 	 * @param response
 	 *            the response as received from the server
 	 * 
+	 * @param exception
+	 *            the {@link IOException} if thrown when hitting the webservice
+	 * 
 	 * @return response that needs to be sent back to the calling code
 	 */
-	public WebResponse afterInvocation(WebResponse response);
+	public WebResponse afterInvocation(WebResponse response, IOException exception);
 	
 }

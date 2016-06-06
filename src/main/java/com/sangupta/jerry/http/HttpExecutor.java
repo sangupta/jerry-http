@@ -372,12 +372,22 @@ public class HttpExecutor {
 				return new HandledWebRawResponse(response);
 			}
 		}
+
+		IOException exception = null;
+		WebRawResponse response = null;
+		try {
+			response = this.executeInternal(webRequest);
+		} catch(IOException e) {
+			exception = e;
+		}
 		
-		WebRawResponse response = this.executeInternal(webRequest);
-		WebResponse actualResponse = response.webResponse();
+		WebResponse actualResponse = null;
+		if(response != null) {
+			actualResponse = response.webResponse();
+		}
 		
 		for(HttpInvocationInterceptor interceptor : this.interceptors) {
-			actualResponse = interceptor.afterInvocation(actualResponse);
+			actualResponse = interceptor.afterInvocation(actualResponse, exception);
 		}
 		
 		return new HandledWebRawResponse(actualResponse);
@@ -681,6 +691,14 @@ public class HttpExecutor {
 		}
 		
 		return this.interceptors.remove(interceptor);
+	}
+	
+	/**
+	 * Clear all interceptors that have been added to this executor till now.
+	 * 
+	 */
+	public void removeAllInterceptors() {
+		this.interceptors.clear();
 	}
 	
 	// Finalization methods

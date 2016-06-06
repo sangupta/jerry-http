@@ -1,5 +1,7 @@
 package com.sangupta.jerry.http;
 
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,7 +41,7 @@ public class TestHttpInvocationInterceptorComparator {
 		}
 
 		@Override
-		public WebResponse afterInvocation(WebResponse response) {
+		public WebResponse afterInvocation(WebResponse response, IOException e) {
 			return null;
 		}
 		
