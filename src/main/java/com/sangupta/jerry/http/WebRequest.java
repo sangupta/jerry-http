@@ -424,6 +424,10 @@ public class WebRequest {
     		return WebRequestMethod.OPTIONS;
     	}
     	
+    	if(this.request instanceof HttpPatch) {
+    		return WebRequestMethod.PATCH;
+    	}
+    	
     	throw new IllegalStateException("Unknown request type");
     }
 

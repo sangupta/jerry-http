@@ -40,5 +40,7 @@ public enum WebRequestMethod {
     
     OPTIONS,
     
+    PATCH,
+    
     TRACE;
 }
