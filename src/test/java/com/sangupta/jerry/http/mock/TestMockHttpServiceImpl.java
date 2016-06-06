@@ -21,7 +21,7 @@ import com.sangupta.jerry.util.HashUtils;
  * @author sangupta
  *
  */
-class TestMockHttpServiceImpl {
+public class TestMockHttpServiceImpl {
 	
 	private final String SOME_TEST_URL = "http://localhost/someUrl";
 
@@ -30,6 +30,15 @@ class TestMockHttpServiceImpl {
 	private final String RANDOM_STRING = HashUtils.getMD5Hex(ByteArrayUtils.getRandomBytes(MAX_LENGTH));
 	
 	private final MockHttpServiceImpl service = new MockHttpServiceImpl();
+	
+	@Test
+	public void testWhenNoResponseIsSet() {
+		Assert.assertNull(service.getTextResponse(SOME_TEST_URL));
+		Assert.assertNull(service.getResponseHeaders(SOME_TEST_URL));
+		
+		service.setConnectionTimeout(200);
+		service.setSocketTimeout(200);
+	}
 	
 	@Test
 	public void testGetTextResponse() {

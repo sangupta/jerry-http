@@ -17,7 +17,7 @@ import com.sangupta.jerry.http.mock.MockWebResponse;
  * @author sangupta
  *
  */
-class TestHttpHelepr {
+public class TestHttpHelepr {
 
 	@Test
 	public void testWriteToFile() throws IOException {
