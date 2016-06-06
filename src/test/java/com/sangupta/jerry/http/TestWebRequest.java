@@ -55,6 +55,7 @@ public class TestWebRequest {
 		Assert.assertNotNull(request.trace());
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testHeaders() {
 		WebRequest request = WebRequest.post("http://localhost:8080/hit");

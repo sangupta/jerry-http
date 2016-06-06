@@ -127,11 +127,6 @@ public class MockWebResponse extends WebResponse {
 	}
 	
 	@Override
-	public void close() {
-		// do nothing
-	}
-	
-	@Override
 	public int hashCode() {
 		if(this.bytes == null) {
 			return -1;

@@ -22,7 +22,6 @@
 package com.sangupta.jerry.http;
 
 import java.io.ByteArrayInputStream;
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +50,7 @@ import com.sangupta.jerry.http.helper.HttpHelper;
  * 
  * @since 0.9.0
  */
-public class WebResponse implements Serializable, Closeable {
+public class WebResponse implements Serializable {
 	
 	/**
 	 * Generated using Eclipse
@@ -111,6 +110,11 @@ public class WebResponse implements Serializable, Closeable {
     
     public WebResponse(byte[] bytes) {
     	this.bytes = bytes;
+    	if(bytes != null) {
+    		this.size = bytes.length;
+    	} else {
+    		this.size = 0;
+    	}
     }
     
     /**
@@ -122,18 +126,6 @@ public class WebResponse implements Serializable, Closeable {
 		this.redirectChain = redirectChain;
 	}
 
-    @Override
-    public void close() {
-    	try {
-    		InputStream stream = this.asStream();
-    		if(stream != null) {
-    			stream.close();
-    		}
-    	} catch(Exception e) {
-    		// eat up
-    	}
-    }
-    
     /**
      * Read the response stream as a {@link String} object considering
      * UTF-8 encoding.
@@ -441,6 +433,10 @@ public class WebResponse implements Serializable, Closeable {
 	 * @return
 	 */
 	public boolean hasRedirects() {
+		if(this.redirectChain == null) {
+			return false;
+		}
+		
 		return !this.redirectChain.isEmpty();
 	}
 	

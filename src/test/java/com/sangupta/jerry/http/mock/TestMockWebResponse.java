@@ -16,7 +16,6 @@ import com.sangupta.jerry.util.HashUtils;
  * @author sangupta
  *
  */
-@SuppressWarnings("resource")
 public class TestMockWebResponse {
 
 	private final int MAX_LENGTH = 1024;
