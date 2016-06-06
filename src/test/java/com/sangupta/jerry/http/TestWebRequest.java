@@ -1,17 +1,29 @@
 package com.sangupta.jerry.http;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Date;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpVersion;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 import org.junit.Assert;
 import org.junit.Test;
+import org.omg.DynamicAny.NameValuePair;
 
 import com.sangupta.jerry.constants.HttpHeaderName;
 import com.sangupta.jerry.constants.HttpMimeType;
+import com.sangupta.jerry.util.ByteArrayUtils;
 
 /**
  * Unit tests for {@link WebRequest}.
@@ -89,4 +101,68 @@ public class TestWebRequest {
 		WebRequest request = WebRequest.get("http://localhost");
 		Assert.assertNotNull(request.toString());
 	}
+
+	@Test
+	public void testBody() throws UnsupportedOperationException, IOException {
+		WebRequest request = WebRequest.post("http://localhost");
+		
+		// string
+
+		request.body(new StringEntity("hello"));
+		Assert.assertEquals("hello", bodyAsString(request));
+		
+		request.bodyString("hello123", HttpMimeType.TEXT_PLAIN);
+		Assert.assertEquals("hello123", bodyAsString(request));
+		
+		request.bodyString("hello234", Charset.defaultCharset());
+		Assert.assertEquals("hello234", bodyAsString(request));
+		
+		request.bodyString("hello123", ContentType.TEXT_PLAIN);
+		Assert.assertEquals("hello123", bodyAsString(request));
+		
+		request.bodyString("hello1231", HttpMimeType.TEXT_PLAIN, Charset.defaultCharset().name());
+		Assert.assertEquals("hello1231", bodyAsString(request));
+		
+		// bytes
+		
+		byte[] bytes = ByteArrayUtils.getRandomBytes(1024);
+		request.bodyByteArray(bytes);
+		Assert.assertArrayEquals(bytes, bodyAsBytes(request));
+		
+		request.bodyByteArray(bytes, 0, bytes.length);
+		Assert.assertArrayEquals(bytes, bodyAsBytes(request));
+		
+		// stream
+		
+		ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+		request.bodyStream(stream);
+		Assert.assertArrayEquals(bytes, bodyAsBytes(request));
+		
+		stream = new ByteArrayInputStream(bytes);
+		request.bodyStream(stream, ContentType.APPLICATION_OCTET_STREAM);
+		Assert.assertArrayEquals(bytes, bodyAsBytes(request));
+	
+		// form
+		request.bodyForm(new BasicNameValuePair("one", "two"), new BasicNameValuePair("three", "four"));
+		Assert.assertEquals("one=two&three=four", bodyAsString(request));
+		
+		request.body(new StringEntity("hello"));
+		request.bodyForm(Arrays.asList(new BasicNameValuePair[] { new BasicNameValuePair("one", "two"), new BasicNameValuePair("three", "four") }));
+		Assert.assertEquals("one=two&three=four", bodyAsString(request));
+		
+		request.body(new StringEntity("hello"));
+		request.bodyForm(Arrays.asList(new BasicNameValuePair[] { new BasicNameValuePair("one", "two"), new BasicNameValuePair("three", "four") }), Charset.defaultCharset());
+		Assert.assertEquals("one=two&three=four", bodyAsString(request));
+	}
+
+	private String bodyAsString(WebRequest request) throws UnsupportedOperationException, IOException {
+		InputStream stream = ((HttpEntityEnclosingRequest) request.getHttpRequest()).getEntity().getContent();
+		return IOUtils.toString(stream);
+	}
+
+	private byte[] bodyAsBytes(WebRequest request) throws UnsupportedOperationException, IOException {
+		InputStream stream = ((HttpEntityEnclosingRequest) request.getHttpRequest()).getEntity().getContent();
+		return IOUtils.toByteArray(stream);
+	}
+
 }

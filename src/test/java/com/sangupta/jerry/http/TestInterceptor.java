@@ -18,6 +18,28 @@ import com.sangupta.jerry.http.service.impl.DefaultHttpServiceImpl;
 public class TestInterceptor {
 	
 	@Test
+	public void testExceptions() {
+		Assert.assertFalse(HttpExecutor.DEFAULT.removeInvocationInterceptor(null));
+		
+		try {
+			HttpExecutor.DEFAULT.addInvocationInterception(null);
+			Assert.assertTrue(false);
+		} catch(IllegalArgumentException e) {
+			Assert.assertTrue(true);
+		}
+	}
+	
+	@Test
+	public void testFinalize() {
+		try {
+			HttpExecutor.DEFAULT.finalize();
+			Assert.assertTrue(true);
+		} catch(Throwable t) {
+			Assert.assertTrue(false);
+		}
+	}
+	
+	@Test
 	public void testInterception() {
 		HttpService service = new DefaultHttpServiceImpl();
 		service.setConnectionTimeout(10);
