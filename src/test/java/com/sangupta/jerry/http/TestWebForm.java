@@ -36,6 +36,17 @@ public class TestWebForm {
 		Assert.assertFalse(form.isEmpty());
 		Assert.assertEquals(Arrays.asList(new String[] { "v2" }), form.getParam("nodup"));
 		Assert.assertEquals(Arrays.asList(new String[] { "v1", "v2" }), form.getParam("dup"));
+		
+		// test size
+		form.clear();
+		Assert.assertEquals(1, form.addParam("1", "value").build().size());
+		form.addParams(null, true);
+		Assert.assertEquals(1, form.addParam("1", "value").build().size());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddParamException() {
+		WebForm.newForm().addParam(null, "value");
 	}
 	
 	@Test
