@@ -63,7 +63,7 @@ public class HttpRateLimitingClient implements HttpClient {
 	/**
 	 * Boolean flag to skip checks if there are no limited hosts defined
 	 */
-	private boolean hasHosts = false;
+	private volatile boolean hasHosts = false;
 	
 	/**
 	 * Constructor - takes an actual implementation of an
