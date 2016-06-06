@@ -37,36 +37,11 @@ public class HttpRateLimitException extends RuntimeException {
 	private static final long serialVersionUID = -8455577300423526727L;
 
 	/**
-	 * Default construtor
-	 * 
-	 */
-	public HttpRateLimitException() {
-		super();
-	}
-	
-	/**
 	 * 
 	 * @param message
 	 */
 	public HttpRateLimitException(String message) {
 		super(message);
-	}
-	
-	/**
-	 * 
-	 * @param message
-	 * @param cause
-	 */
-	public HttpRateLimitException(String message, Throwable cause) {
-		super(message, cause);
-	}
-	
-	/**
-	 * 
-	 * @param cause
-	 */
-	public HttpRateLimitException(Throwable cause) {
-		super(cause);
 	}
 	
 }
