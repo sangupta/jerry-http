@@ -1,5 +1,6 @@
 package com.sangupta.jerry.http;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -18,9 +20,6 @@ import org.junit.Test;
 
 import com.sangupta.jerry.constants.HttpHeaderName;
 import com.sangupta.jerry.constants.HttpMimeType;
-import com.sangupta.jerry.http.WebRequest;
-import com.sangupta.jerry.http.WebRequestMethod;
-import com.sangupta.jerry.http.WebResponse;
 import com.sangupta.jerry.http.service.HttpService;
 import com.sangupta.jerry.http.service.impl.DefaultHttpServiceImpl;
 import com.sangupta.jerry.util.ByteArrayUtils;
@@ -263,6 +262,25 @@ public class TestDefaultHttpServiceImpl {
 		Assert.assertEquals(RANDOM_STRING, result.getContent());
 		Assert.assertNotNull(result.getHeaders());
 		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
+	}
+	
+	@Test
+	public void testWriteToFile() throws IOException {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		File file = service.downloadToTempFile(LOCAL_URL);
+		Assert.assertEquals(RANDOM_STRING, FileUtils.readFileToString(file));
+		
+		FileUtils.deleteQuietly(file);
+	}
+	
+	@Test
+	public void testWriteToGivenFile() throws IOException {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		File file = File.createTempFile("test-jerry-http-", ".dat");
+		service.downloadToFile(LOCAL_URL, file);
+		Assert.assertEquals(RANDOM_STRING, FileUtils.readFileToString(file));
+		
+		FileUtils.deleteQuietly(file);
 	}
 	
 	static class MyHandler implements HttpHandler {

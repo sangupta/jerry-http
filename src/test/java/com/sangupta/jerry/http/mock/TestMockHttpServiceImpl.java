@@ -1,7 +1,10 @@
 package com.sangupta.jerry.http.mock;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -182,4 +185,24 @@ public class TestMockHttpServiceImpl {
 		Assert.assertEquals(response, result);
 	}
 	
+	@Test
+	public void testWriteToFile() throws IOException {
+		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
+		service.setNextResponse(response);
+		File file = service.downloadToTempFile(SOME_TEST_URL);
+		Assert.assertEquals(RANDOM_STRING, FileUtils.readFileToString(file));
+		
+		FileUtils.deleteQuietly(file);
+	}
+	
+	@Test
+	public void testWriteToGivenFile() throws IOException {
+		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
+		service.setNextResponse(response);
+		File file = File.createTempFile("test-jerry-http-", ".dat");
+		service.downloadToFile(SOME_TEST_URL, file);
+		Assert.assertEquals(RANDOM_STRING, FileUtils.readFileToString(file));
+		
+		FileUtils.deleteQuietly(file);
+	}
 }
