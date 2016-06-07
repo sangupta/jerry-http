@@ -21,6 +21,10 @@ For more information on the project, refer to the uber https://github.com/sangup
 * Many convenience methods to get request/response data
 * Deal with two standard POJO objects than deal with many Apache HC specific objects
 
+## Roadmap
+
+* Add a download manager
+* Add an import/export for `curl` commands
 
 ## Breaking changes from version 1.0.0
 
