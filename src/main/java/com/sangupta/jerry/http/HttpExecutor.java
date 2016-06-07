@@ -701,6 +701,10 @@ public class HttpExecutor {
 		this.interceptors.clear();
 	}
 	
+	static PoolingHttpClientConnectionManager getConnectionManager() {
+		return HTTP_CONNECTION_MANAGER;
+	}
+	
 	// Finalization methods
 	
 	/* (non-Javadoc)
