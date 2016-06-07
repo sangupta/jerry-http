@@ -51,16 +51,6 @@ public class TestInterceptor {
 	}
 	
 	@Test
-	public void testFinalize() {
-		try {
-			HttpExecutor.DEFAULT.finalize();
-			Assert.assertTrue(true);
-		} catch(Throwable t) {
-			Assert.assertTrue(false);
-		}
-	}
-	
-	@Test
 	public void testInterception() {
 		HttpService service = new DefaultHttpServiceImpl();
 		service.setConnectionTimeout(10);
