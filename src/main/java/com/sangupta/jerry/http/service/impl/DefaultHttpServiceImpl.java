@@ -257,10 +257,6 @@ public class DefaultHttpServiceImpl implements HttpService {
 	@Override
 	public WebRequest getWebRequest(WebRequestMethod method, String uri) {
 		WebRequest request = HttpHelper.getWebRequest(method, uri);
-		if(request == null) {
-			return null;
-		}
-		
 		request.connectTimeout(connectionTimeout).socketTimeout(socketTimeout).cookiePolicy(cookiePolicy);
 		if(this.followRedirects) {
 			request.followRedirects();

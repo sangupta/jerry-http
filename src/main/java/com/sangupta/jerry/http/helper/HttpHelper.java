@@ -33,6 +33,7 @@ import com.sangupta.jerry.http.WebRequest;
 import com.sangupta.jerry.http.WebRequestMethod;
 import com.sangupta.jerry.http.WebResponse;
 import com.sangupta.jerry.http.service.HttpService;
+import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.UriUtils;
 
 /**
@@ -100,39 +101,58 @@ public abstract class HttpHelper {
 		return false;
 	}
 
-	public static WebRequest getWebRequest(WebRequestMethod method, String uri) {
+	/**
+	 * Create a {@link WebRequest} object for the given {@link WebRequestMethod}
+	 * and the given url. This method will never return a <code>null</code>.
+	 * 
+	 * @param method
+	 *            the HTTP VERB to use
+	 * 
+	 * @param url
+	 *            the URL for which to create the request
+	 * 
+	 * @return the constructed {@link WebRequest} object
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if {@link WebRequestMethod} or url is <code>null</code>.
+	 */
+	public static WebRequest getWebRequest(WebRequestMethod method, String url) {
 		if(method == null) {
 			throw new IllegalArgumentException("WebRequestMethod cannot be null");
+		}
+		
+		if(AssertUtils.isEmpty(url)) {
+			throw new IllegalArgumentException("URL cannot be null/empty");
 		}
 		
 		WebRequest request = null;
 		switch(method) {
 			case DELETE:
-				request = WebRequest.delete(uri);
+				request = WebRequest.delete(url);
 				break;
 				
 			case GET:
-				request = WebRequest.get(uri);
+				request = WebRequest.get(url);
 				break;
 				
 			case HEAD:
-				request = WebRequest.head(uri);
+				request = WebRequest.head(url);
 				break;
 				
 			case OPTIONS:
-				request = WebRequest.options(uri);
+				request = WebRequest.options(url);
 				break;
 				
 			case POST:
-				request = WebRequest.post(uri);
+				request = WebRequest.post(url);
 				break;
 				
 			case PUT:
-				request = WebRequest.put(uri);
+				request = WebRequest.put(url);
 				break;
 				
 			case TRACE:
-				request = WebRequest.trace(uri);
+				request = WebRequest.trace(url);
 				break;
 				
 			default:
