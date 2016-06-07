@@ -68,6 +68,8 @@ public class TestWebRawResponse {
 		Assert.assertFalse(response.isConsumed());
 		response.discardContent();
 		Assert.assertTrue(response.isConsumed());
+		response.discardContent();
+		Assert.assertTrue(response.isConsumed());
 		
 		// webresponse
 		response = new WebRawResponse(null, null);
@@ -111,6 +113,21 @@ public class TestWebRawResponse {
 			response.writeToFile(file);
 			Assert.assertTrue(false);
 		} catch(HttpResponseException e) {
+			Assert.assertTrue(true);
+		}
+		
+		// write again
+		hr.responseCode = 200;
+		hr.entity = new StringEntity("hello");
+		response = new WebRawResponse(hr, null);
+		response.writeToFile(file);
+		Assert.assertEquals("hello", FileUtils.readFileToString(file));
+		FileUtils.deleteQuietly(file);
+		
+		try {
+			response.writeToFile(file);
+			Assert.assertTrue(false);
+		} catch(IllegalStateException e) {
 			Assert.assertTrue(true);
 		}
 	}

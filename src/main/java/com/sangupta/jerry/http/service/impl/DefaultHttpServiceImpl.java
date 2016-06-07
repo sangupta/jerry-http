@@ -159,6 +159,20 @@ public class DefaultHttpServiceImpl implements HttpService {
 		
 		return null;
 	}
+	
+	@Override
+	public WebResponse doPATCH(String url, String requestBody, String mimeType) {
+		try {
+			WebRequest request = this.getWebRequest(WebRequestMethod.PATCH, url);
+			request.bodyString(requestBody, ContentType.create(mimeType));
+			
+			return request.execute().webResponse();
+		} catch(IOException e) {
+			LOGGER.debug("Unable to fetch repsonse from url: {}", url, e);
+		}
+		
+		return null;
+	}
 
 	@Override
 	public WebResponse doDELETE(String url) {

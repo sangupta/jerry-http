@@ -27,11 +27,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.sangupta.jerry.constants.HttpHeaderName;
 import com.sangupta.jerry.util.ByteArrayUtils;
 import com.sangupta.jerry.util.HashUtils;
 
@@ -60,6 +62,9 @@ public class TestWebResponse {
 		Assert.assertArrayEquals(bytes, IOUtils.toByteArray(stream));
 		
 		Assert.assertEquals(data, response.asContent(Charset.defaultCharset()));
+		
+		response.charSet = Charset.defaultCharset();
+		Assert.assertEquals(data, response.asString(Charset.defaultCharset()));
 		
 		// response code
 		response.responseCode = 200;
@@ -107,7 +112,8 @@ public class TestWebResponse {
 		Assert.assertNull(response.getFinalURI());
 		
 		// set redirects
-		response.redirectChain = new ArrayList<>();
+		List<URI> list = new ArrayList<>();
+		response.setRedirectChain(list);
 		URI uri = new URI("http://localhost");
 		response.redirectChain.add(uri);
 
@@ -128,5 +134,18 @@ public class TestWebResponse {
 		Assert.assertNull(response.asStream());
 		Assert.assertNull(response.asClonedBytes());
 		Assert.assertNull(response.getHeaders().get("temp"));
+	}
+	
+	@Test
+	public void testGetLastModified() {
+		WebResponse response = new WebResponse("hello");
+		
+		Assert.assertEquals(-1, response.getLastModified());
+		
+		response.headers.put(HttpHeaderName.LAST_MODIFIED, "Fri, 03 Jun 2016 01:54:51 GMT");
+		Assert.assertEquals(1464918891000l, response.getLastModified());
+		
+		response.headers.put(HttpHeaderName.LAST_MODIFIED, "garbage value");
+		Assert.assertEquals(-1, response.getLastModified());
 	}
 }

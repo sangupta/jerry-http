@@ -139,6 +139,17 @@ public class TestMockHttpServiceImpl {
 	}
 	
 	@Test
+	public void testDoPATCH() {
+		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
+		response.addHeader(RANDOM_STRING, RANDOM_STRING);
+		service.setNextResponse(response);
+		WebResponse result = service.doPATCH(SOME_TEST_URL, RANDOM_STRING, HttpMimeType.BINARY);
+		
+		Assert.assertNotNull(result);
+		Assert.assertEquals(response, result);
+	}
+	
+	@Test
 	public void testDoOPTIONS() {
 		MockWebResponse response = new MockWebResponse(RANDOM_STRING);
 		response.addHeader(RANDOM_STRING, RANDOM_STRING);

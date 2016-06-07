@@ -132,6 +132,22 @@ public interface HttpService {
 	public WebResponse doPUT(String url, String requestBody, String mimeType);
 	
 	/**
+	 * Make a PATCH request to the URL and return the web response.
+	 * 
+	 * @param url
+	 *            the url to hit
+	 * 
+	 * @param requestBody
+	 *            the request body to set
+	 * 
+	 * @param mimeType
+	 *            the {@link HttpMimeType} for the request
+	 * 
+	 * @return the {@link WebResponse} obtained
+	 */
+	public WebResponse doPATCH(String url, String requestBody, String mimeType);
+	
+	/**
 	 * Make a DELETE request to the URL and return the web response. 
 	 * 
 	 * @param url

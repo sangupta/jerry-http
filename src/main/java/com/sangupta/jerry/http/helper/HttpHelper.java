@@ -155,6 +155,10 @@ public abstract class HttpHelper {
 				request = WebRequest.trace(url);
 				break;
 				
+			case PATCH:
+				request = WebRequest.patch(url);
+				break;
+				
 			default:
 				throw new IllegalStateException("All options of enumeration have a check above, reaching this is impossible. This is a coding horror.");
 		}

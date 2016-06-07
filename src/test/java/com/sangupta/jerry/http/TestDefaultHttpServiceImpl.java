@@ -182,6 +182,22 @@ public class TestDefaultHttpServiceImpl {
 	}
 	
 	@Test
+	public void testDoPATCH() {
+		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
+		handler.setHeader(RANDOM_STRING, RANDOM_STRING);
+		handler.checkBody(RANDOM_STRING);
+		handler.checkMethod(WebRequestMethod.PATCH);
+		
+		WebResponse result = service.doPATCH(LOCAL_URL, RANDOM_STRING, HttpMimeType.BINARY);
+		
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getContent());
+		Assert.assertEquals(RANDOM_STRING, result.getContent());
+		Assert.assertNotNull(result.getHeaders());
+		Assert.assertEquals(RANDOM_STRING, result.getHeaders().get(RANDOM_STRING));
+	}
+	
+	@Test
 	public void testDoOPTIONS() {
 		handler.setResponse(RESPONSE_CODE, RANDOM_STRING);
 		handler.setHeader(RANDOM_STRING, RANDOM_STRING);

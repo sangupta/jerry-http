@@ -114,6 +114,40 @@ public class TestWebRequest {
 
 		request.userAgent("temp123");
 		Assert.assertEquals("temp123", request.getHttpRequest().getFirstHeader(HttpHeaderName.USER_AGENT).getValue());
+		
+		request = WebRequest.post("http://localhost:8080/hit");
+		Assert.assertEquals(0, request.getHttpRequest().getAllHeaders().length);
+		
+		request.setHeaders(new Header[] { new BasicHeader("name", "value") });
+		Assert.assertEquals(1, request.getHttpRequest().getAllHeaders().length);
+		request.setHeaders(null);
+		Assert.assertEquals(0, request.getHttpRequest().getAllHeaders().length);
+		
+		// date header
+		request.setDate(date);
+		dte = request.getHttpRequest().getFirstHeader(HttpHeaderName.DATE).getValue();
+		Assert.assertEquals(date.getTime() / 10000l, Date.parse(dte) / 10000l);
+	}
+	
+	@Test
+	public void testConfig() {
+		WebRequest request = WebRequest.post("http://localhost:8080/hit");
+		request.prepareForExecute();
+		Assert.assertEquals(false, request.getHttpRequest().getConfig().isExpectContinueEnabled());
+		
+		request.useExpectContinue();
+		request.prepareForExecute();
+		Assert.assertEquals(true, request.getHttpRequest().getConfig().isExpectContinueEnabled());
+		
+		Assert.assertEquals(true, request.getHttpRequest().getConfig().isRedirectsEnabled());
+		request.noRedirects();
+		request.prepareForExecute();
+		Assert.assertEquals(false, request.getHttpRequest().getConfig().isRedirectsEnabled());
+		
+		Assert.assertNull(request.getHttpRequest().getConfig().getProxy());
+		request.viaProxy("localhost");
+		request.prepareForExecute();
+		Assert.assertNotNull(request.getHttpRequest().getConfig().getProxy());
 	}
 	
 	@Test
@@ -124,10 +158,19 @@ public class TestWebRequest {
 
 	@Test
 	public void testBody() throws UnsupportedOperationException, IOException {
-		WebRequest request = WebRequest.post("http://localhost");
+		// exception on get request
+		WebRequest request = WebRequest.get("http://localhost");
+		try {
+			request.body(new StringEntity("hello"));
+			Assert.assertTrue(false);
+		} catch(IllegalStateException e) {
+			Assert.assertTrue(true);
+		}
+		
+		// check for post
+		request = WebRequest.post("http://localhost");
 		
 		// string
-
 		request.body(new StringEntity("hello"));
 		Assert.assertEquals("hello", bodyAsString(request));
 		

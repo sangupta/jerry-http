@@ -430,6 +430,14 @@ public class WebRequest {
     	
     	throw new IllegalStateException("Unknown request type");
     }
+    
+    /**
+     * Prepare this request for execution.
+     *  
+     */
+    public void prepareForExecute() {
+    	this.request.setConfig(this.requestConfigBuilder.build());
+    }
 
     /**
 	 * Execute this web request now.
@@ -443,7 +451,7 @@ public class WebRequest {
 	 *             if something else fails
 	 */
     public WebRawResponse execute() throws ClientProtocolException, IOException {
-    	this.request.setConfig(this.requestConfigBuilder.build());
+    	this.prepareForExecute();
         return HttpExecutor.DEFAULT.execute(this);
     }
 

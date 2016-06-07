@@ -139,6 +139,11 @@ public class MockHttpServiceImpl implements HttpService {
 	public WebResponse doPUT(String url, String requestBody, String mimeType) {
 		return this.getResponse();
 	}
+	
+	@Override
+	public WebResponse doPATCH(String url, String requestBody, String mimeType) {
+		return this.getResponse();
+	}
 
 	@Override
 	public WebResponse doDELETE(String url) {
