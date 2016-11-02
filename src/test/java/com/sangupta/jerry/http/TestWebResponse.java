@@ -48,7 +48,7 @@ public class TestWebResponse {
 	@Test
 	public void test() throws IOException, URISyntaxException {
 		String data = "0" + HashUtils.getMD5Hex(ByteArrayUtils.getRandomBytes(1024));
-		WebResponse response = new WebResponse(data);
+		WebResponse response = new WebResponse(null, data);
 		
 		// content
 		byte[] bytes = data.getBytes();
@@ -130,7 +130,7 @@ public class TestWebResponse {
 	
 	@Test
 	public void testEmpty() {
-		WebResponse response = new WebResponse((byte[]) null);
+		WebResponse response = new WebResponse(null, (byte[]) null);
 		Assert.assertNull(response.asStream());
 		Assert.assertNull(response.asClonedBytes());
 		Assert.assertNull(response.getHeaders().get("temp"));
@@ -138,7 +138,7 @@ public class TestWebResponse {
 	
 	@Test
 	public void testGetLastModified() {
-		WebResponse response = new WebResponse("hello");
+		WebResponse response = new WebResponse(null, "hello");
 		
 		Assert.assertEquals(-1, response.getLastModified());
 		

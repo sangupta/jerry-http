@@ -23,6 +23,7 @@ package com.sangupta.jerry.http;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
@@ -51,20 +52,20 @@ public class TestWebRawResponse {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
-		WebRawResponse response = new WebRawResponse(null, null);
+		WebRawResponse response = new WebRawResponse(null, null, null);
 		
 		Assert.assertFalse(response.isConsumed());
 		response.handleResponse(new HttpResponseHandler() {
 			
 			@Override
-			public WebResponse handleResponse(HttpResponse response, HttpContext httpContext) throws ClientProtocolException, IOException {
+			public WebResponse handleResponse(URI originalURI, HttpResponse response, HttpContext httpContext) throws ClientProtocolException, IOException {
 				return null;
 			}
 		});
 		Assert.assertTrue(response.isConsumed());
 		
 		// discard
-		response = new WebRawResponse(null, null);
+		response = new WebRawResponse(null, null, null);
 		Assert.assertFalse(response.isConsumed());
 		response.discardContent();
 		Assert.assertTrue(response.isConsumed());
@@ -72,13 +73,13 @@ public class TestWebRawResponse {
 		Assert.assertTrue(response.isConsumed());
 		
 		// webresponse
-		response = new WebRawResponse(null, null);
+		response = new WebRawResponse(null, null, null);
 		
 		Assert.assertFalse(response.isConsumed());
 		WebResponse webResponse = response.webResponse(new HttpResponseHandler() {
 			
 			@Override
-			public WebResponse handleResponse(HttpResponse response, HttpContext httpContext) throws ClientProtocolException, IOException {
+			public WebResponse handleResponse(URI originalURI, HttpResponse response, HttpContext httpContext) throws ClientProtocolException, IOException {
 				return null;
 			}
 		});
@@ -93,7 +94,7 @@ public class TestWebRawResponse {
 		// empty
 		MyResponse hr = new MyResponse();
 		hr.responseCode = 200;
-		WebRawResponse response = new WebRawResponse(hr, null);
+		WebRawResponse response = new WebRawResponse(null, hr, null);
 		response.writeToFile(file);
 		Assert.assertEquals("", FileUtils.readFileToString(file));
 		FileUtils.deleteQuietly(file);
@@ -101,7 +102,7 @@ public class TestWebRawResponse {
 		// some data
 		hr.responseCode = 200;
 		hr.entity = new StringEntity("hello");
-		response = new WebRawResponse(hr, null);
+		response = new WebRawResponse(null, hr, null);
 		response.writeToFile(file);
 		Assert.assertEquals("hello", FileUtils.readFileToString(file));
 		FileUtils.deleteQuietly(file);
@@ -109,7 +110,7 @@ public class TestWebRawResponse {
 		// error
 		try {
 			hr.responseCode = 301;
-			response = new WebRawResponse(hr, null);
+			response = new WebRawResponse(null, hr, null);
 			response.writeToFile(file);
 			Assert.assertTrue(false);
 		} catch(HttpResponseException e) {
@@ -119,7 +120,7 @@ public class TestWebRawResponse {
 		// write again
 		hr.responseCode = 200;
 		hr.entity = new StringEntity("hello");
-		response = new WebRawResponse(hr, null);
+		response = new WebRawResponse(null, hr, null);
 		response.writeToFile(file);
 		Assert.assertEquals("hello", FileUtils.readFileToString(file));
 		FileUtils.deleteQuietly(file);

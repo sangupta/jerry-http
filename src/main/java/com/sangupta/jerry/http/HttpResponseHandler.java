@@ -21,6 +21,7 @@
 
 package com.sangupta.jerry.http;
 import java.io.IOException;
+import java.net.URI;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -55,6 +56,6 @@ public interface HttpResponseHandler {
 	 * @throws IOException
 	 *             in case of a problem or the connection was aborted
 	 */
-    WebResponse handleResponse(HttpResponse response, HttpContext httpContext) throws ClientProtocolException, IOException;
+    WebResponse handleResponse(URI originalURI, HttpResponse response, HttpContext httpContext) throws ClientProtocolException, IOException;
 
 }

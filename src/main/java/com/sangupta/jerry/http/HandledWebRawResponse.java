@@ -47,7 +47,7 @@ public class HandledWebRawResponse extends WebRawResponse {
 	 * @param response the {@link WebResponse} that will be returned
 	 */
 	HandledWebRawResponse(WebResponse response) {
-		super(null, null);
+		super(null, null, null);
 		this.webResponse = response;
 	}
 	

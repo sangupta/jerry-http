@@ -52,7 +52,7 @@ public class MockWebResponse extends WebResponse {
 	 * @param responseBody
 	 */
 	public MockWebResponse(String responseBody) {
-		super(responseBody);
+		super(null, responseBody);
 	}
 	
 	@Override

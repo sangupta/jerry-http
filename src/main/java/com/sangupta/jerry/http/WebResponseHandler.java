@@ -22,6 +22,7 @@
 package com.sangupta.jerry.http;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.UnsupportedCharsetException;
 
 import org.apache.http.Header;
@@ -53,7 +54,7 @@ public class WebResponseHandler implements HttpResponseHandler {
 	 * @see org.apache.http.client.ResponseHandler#handleResponse(org.apache.http.HttpResponse)
 	 */
 	@Override
-	public WebResponse handleResponse(HttpResponse response, HttpContext localHttpContext) throws ClientProtocolException, IOException {
+	public WebResponse handleResponse(URI originalURI, HttpResponse response, HttpContext localHttpContext) throws ClientProtocolException, IOException {
 		StatusLine statusLine = response.getStatusLine();
         HttpEntity entity = response.getEntity();
         
@@ -61,7 +62,7 @@ public class WebResponseHandler implements HttpResponseHandler {
         if(entity != null) {
         	bytes = EntityUtils.toByteArray(entity);
         }
-		final WebResponse webResponse = new WebResponse(bytes);
+		final WebResponse webResponse = new WebResponse(originalURI, bytes);
 		
 		// decipher from status line
 		webResponse.responseCode = statusLine.getStatusCode();

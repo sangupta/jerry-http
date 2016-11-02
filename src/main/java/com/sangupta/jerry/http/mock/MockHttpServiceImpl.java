@@ -42,7 +42,7 @@ import com.sangupta.jerry.http.service.HttpService;
  */
 public class MockHttpServiceImpl implements HttpService {
 	
-	private static final WebResponse SENTINEL_RESPONSE = new WebResponse(null);
+	private static final WebResponse SENTINEL_RESPONSE = new WebResponse(null, null);
 	
 	protected final ThreadLocal<AtomicReference<WebResponse>> nextReturnValue = new ThreadLocal<>();
 	

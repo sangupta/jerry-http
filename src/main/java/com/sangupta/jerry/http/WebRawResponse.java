@@ -25,6 +25,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
@@ -54,6 +55,11 @@ public class WebRawResponse {
 	private final HttpResponse response;
 	
 	/**
+	 * Internal handle to original {@link URI}
+	 */
+	private final URI originalURI;
+	
+	/**
 	 * Internal {@link HttpContext} handle
 	 */
 	private final HttpContext localHttpContext;
@@ -68,6 +74,9 @@ public class WebRawResponse {
 	 * Constructor that takes a {@link HttpResponse} object and stores it
 	 * internally for processing.
 	 * 
+	 * @param originalURI
+	 *            the original {@link URI} that was hit to get this response
+	 * 
 	 * @param response
 	 *            the actual {@link HttpResponse} object that was returned from
 	 *            the server
@@ -76,8 +85,9 @@ public class WebRawResponse {
 	 *            the local {@link HttpContext} as applicable to this request
 	 * 
 	 */
-    WebRawResponse(final HttpResponse response, HttpContext localHttpContext) {
+    WebRawResponse(final URI originalURI, final HttpResponse response, HttpContext localHttpContext) {
         super();
+        this.originalURI = originalURI;
         this.response = response;
         this.localHttpContext = localHttpContext;
     }
@@ -135,7 +145,7 @@ public class WebRawResponse {
         assertNotConsumed();
         
         try {
-        	return handler.handleResponse(response, localHttpContext);
+        	return handler.handleResponse(this.originalURI, this.response, this.localHttpContext);
         } finally {
             dispose();
         }

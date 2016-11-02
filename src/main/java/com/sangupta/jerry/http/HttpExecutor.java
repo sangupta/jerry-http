@@ -404,11 +404,10 @@ public class HttpExecutor {
         localHttpContext.setAttribute(HttpClientContext.AUTH_CACHE, this.authCache);
         localHttpContext.setAttribute(HttpClientContext.COOKIE_STORE, this.cookieStore);
         
-        // localHttpContext.removeAttribute(DefaultRedirectStrategy.REDIRECT_LOCATIONS);
-        
         HttpRequestBase httpRequest = webRequest.getHttpRequest();
         httpRequest.reset();
-        return new WebRawResponse(this.client.execute(httpRequest, localHttpContext), localHttpContext);
+        
+        return new WebRawResponse(httpRequest.getURI(), this.client.execute(httpRequest, localHttpContext), localHttpContext);
 	}
     
 	// Methods related to rate limiting

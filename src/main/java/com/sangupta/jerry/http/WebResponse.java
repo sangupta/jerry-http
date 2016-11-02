@@ -56,6 +56,8 @@ public class WebResponse implements Serializable {
 	 * Generated using Eclipse
 	 */
 	private static final long serialVersionUID = 5896497905018410580L;
+	
+	protected final URI originalURI;
 
 	/**
      * The response code returned by the webservice invocation.
@@ -97,7 +99,9 @@ public class WebResponse implements Serializable {
      */
     protected long size;
     
-    protected WebResponse(String responseBody) {
+    protected WebResponse(URI originalURI, String responseBody) {
+    	this.originalURI = originalURI;
+    	
     	if(responseBody == null) {
     		this.bytes = null;
     		this.size = 0;
@@ -108,7 +112,9 @@ public class WebResponse implements Serializable {
     	this.size = this.bytes.length;
 	}
     
-    public WebResponse(byte[] bytes) {
+    public WebResponse(URI originalURI, byte[] bytes) {
+    	this.originalURI = originalURI;
+    	
     	this.bytes = bytes;
     	if(bytes != null) {
     		this.size = bytes.length;
