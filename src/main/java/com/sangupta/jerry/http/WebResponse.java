@@ -443,6 +443,21 @@ public class WebResponse implements Serializable {
 	}
 	
 	/**
+	 * Returns the actual URI that generated the response. In case of redirects
+	 * this is the last redirected request, that eventually led to response.
+	 * 
+	 * @return the URI used for this response
+	 */
+	public URI getURI() {
+		URI redirected = this.getFinalURI();
+		if(redirected != null) {
+			return redirected;
+		}
+		
+		return this.originalURI;
+	}
+	
+	/**
 	 * Returns the final URL that was used to hit a resource.
 	 * 
 	 * @return
