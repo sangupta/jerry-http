@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<version>9</version>
 	</parent>
   
 	<modelVersion>4.0.0</modelVersion>
@@ -16,7 +16,7 @@
 	
 	<name>Jerry HTTP Project</name>
 	<description>Common Java functionality for working with HTTP requests</description>
-	<url>http://sangupta.com/projects/jerry</url>
+	<url>https://sangupta.com/projects/jerry</url>
 	<inceptionYear>2012</inceptionYear>
 
 	<licenses>
@@ -37,7 +37,7 @@
 			<id>sangupta</id>
 			<name>Sandeep Gupta</name>
 			<email>sandy.pec@gmail.com</email>
-			<url>http://www.sangupta.com</url>
+			<url>https://sangupta.com</url>
 		</developer>
 	</developers>
 
@@ -91,7 +91,7 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.6.2</version>
+			<version>2.8.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -101,7 +101,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.6.0</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
@@ -112,7 +112,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.6</version>
+				<version>2.7</version>
 				<configuration>
 					<format>xml</format>
 					<maxmem>256m</maxmem>
@@ -120,17 +120,18 @@
 					<skip>false</skip>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.eluder.coveralls</groupId>
 				<artifactId>coveralls-maven-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>4.3.0</version>
 			</plugin>
 
 			<!-- Generate the project-javadoc.jar for OSS repository -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>2.10.4</version>
 				<configuration>
 					<detectOfflineLinks>false</detectOfflineLinks>
 					<breakiterator>true</breakiterator>
@@ -144,7 +145,7 @@
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
+                <version>3.0.1</version>
 				<executions>
 					<!-- ~ This workaround prevents Maven from executing the 'generate-sources' 
 						phase twice. ~ See http://jira.codehaus.org/browse/MSOURCES-13 ~ and http://blog.peterlynch.ca/2010/05/maven-how-to-prevent-generate-sources.html -->
