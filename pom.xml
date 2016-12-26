@@ -16,7 +16,7 @@
 	
 	<name>Jerry HTTP Project</name>
 	<description>Common Java functionality for working with HTTP requests</description>
-	<url>https://sangupta.com/projects/jerry</url>
+	<url>https://sangupta.com/projects/jerry-http</url>
 	<inceptionYear>2012</inceptionYear>
 
 	<licenses>
@@ -78,7 +78,7 @@
 		<dependency>
 			<groupId>com.sangupta</groupId>
 			<artifactId>jerry-core</artifactId>
-			<version>2.4.0</version>
+			<version>3.0.0</version>
 		</dependency>
 
 		<!-- For serialization/deserialization utils -->
