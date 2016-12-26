@@ -66,10 +66,10 @@ public class HttpRateLimitingClient implements HttpClient {
 	private volatile boolean hasHosts = false;
 	
 	/**
-	 * Constructor - takes an actual implementation of an
-	 * {@link HttpClient}.
+	 * Constructor - takes an actual implementation of an {@link HttpClient}.
 	 * 
 	 * @param actualClient
+	 *            the {@link HttpClient} to use
 	 */
 	public HttpRateLimitingClient(HttpClient actualClient) {
 		this.actualClient = actualClient;
@@ -88,8 +88,13 @@ public class HttpRateLimitingClient implements HttpClient {
 	 * Add rate limiting around a given host name
 	 * 
 	 * @param hostName
+	 *            the host name
+	 * 
 	 * @param limit
+	 *            the limit
+	 * 
 	 * @param timeUnit
+	 *            the time unit against which the limit is set
 	 */
 	public void addRateLimiting(String hostName, int limit, TimeUnit timeUnit) {
 		if(limit <= 0) {
@@ -130,6 +135,7 @@ public class HttpRateLimitingClient implements HttpClient {
 	 * Remove rate limiting around this hostname.
 	 * 
 	 * @param hostName
+	 *            the host name to remove rate limiting from
 	 */
 	public void removeRateLimiting(String hostName) {
 		RATE_LIMITED_HOSTS.remove(hostName);

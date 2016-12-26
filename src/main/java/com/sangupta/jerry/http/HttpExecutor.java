@@ -416,8 +416,15 @@ public class HttpExecutor {
 	 * Add new rate limiting for the given host.
 	 * 
 	 * @param hostName
+	 *            the hostname to add rate limit to
+	 * 
 	 * @param limit
+	 *            the limit to be used
+	 * 
 	 * @param timeUnit
+	 *            the time unit against which we are setting rate limit
+	 * 
+	 * @return this very {@link HttpExecutor} instance
 	 */
 	public HttpExecutor addRateLimiting(String hostName, int limit, TimeUnit timeUnit) {
 		if(this.client instanceof HttpRateLimitingClient) {
@@ -433,6 +440,8 @@ public class HttpExecutor {
 	 * 
 	 * @param hostName
 	 *            the host name for which we need to remove rate limiting
+	 * 
+	 * @return this very {@link HttpExecutor} instance
 	 */
 	public HttpExecutor removeRateLimiting(String hostName) {
 		if(this.client instanceof HttpRateLimitingClient) {
@@ -446,7 +455,7 @@ public class HttpExecutor {
 	/**
 	 * Remove all previously set rate limiting.
 	 * 
-	 * @return this very {@link HttpExecutor}
+	 * @return this very {@link HttpExecutor} instance
 	 */
 	public HttpExecutor removeAllRateLimiting() {
 		if(this.client instanceof HttpRateLimitingClient) {
@@ -594,9 +603,13 @@ public class HttpExecutor {
     // Utility methods start here
     
 	/**
-	 * Set overall maximum connections that can be handled by the underlying connection manager.
+	 * Set overall maximum connections that can be handled by the underlying
+	 * connection manager.
 	 * 
 	 * @param numConnections
+	 *            the number of connections
+	 * 
+	 * @return this very {@link HttpExecutor} instance
 	 */
 	public HttpExecutor maxConnections(int numConnections) {
 		setMaxConnections(numConnections);
@@ -604,10 +617,13 @@ public class HttpExecutor {
 	}
 	
 	/**
-	 * Set overall maximum connections per route (over all hosts) that can be handled by the underlying connection
-	 * manager.
+	 * Set overall maximum connections per route (over all hosts) that can be
+	 * handled by the underlying connection manager.
 	 * 
 	 * @param numConnections
+	 *            the number of connections
+	 * 
+	 * @return this very {@link HttpExecutor} instance
 	 */
 	public HttpExecutor maxConnectionsPerRoute(int numConnections) {
 		setMaxConnectionsPerRoute(numConnections);
@@ -615,11 +631,16 @@ public class HttpExecutor {
 	}
 	
 	/**
-	 * Set maximum connections that will be operated over the given route, that will be handled by the underlying
-	 * connection manager.
+	 * Set maximum connections that will be operated over the given route, that
+	 * will be handled by the underlying connection manager.
 	 * 
 	 * @param route
+	 *            the {@link HttpRoute} to use
+	 * 
 	 * @param numConnections
+	 *            the number of connections
+	 * 
+	 * @return this very {@link HttpExecutor} instance
 	 */
 	public HttpExecutor maxConnectionsOnHost(HttpRoute route, int numConnections) {
 		setMaxConnectionsOnHost(route, numConnections);
@@ -627,11 +648,16 @@ public class HttpExecutor {
 	}
 	
 	/**
-	 * Set maximum connections that will be operated over the given host on port 80, that will be handled by the underlying
-	 * connection manager.
+	 * Set maximum connections that will be operated over the given host on port
+	 * 80, that will be handled by the underlying connection manager.
 	 * 
 	 * @param hostName
+	 *            the host name to use
+	 * 
 	 * @param numConnections
+	 *            the number of connections
+	 * 
+	 * @return this very {@link HttpExecutor} instance
 	 */
 	public HttpExecutor maxConnectionsOnHost(String hostName, int numConnections) {
 		HttpRoute route = new HttpRoute(new HttpHost(hostName));
@@ -640,12 +666,19 @@ public class HttpExecutor {
 	}
 	
 	/**
-	 * Set maximum connections that will be operated over the given host on given port, that will be handled by the underlying
-	 * connection manager.
+	 * Set maximum connections that will be operated over the given host on
+	 * given port, that will be handled by the underlying connection manager.
 	 * 
 	 * @param hostName
+	 *            the host name to use
+	 * 
 	 * @param port
+	 *            the port to use
+	 * 
 	 * @param numConnections
+	 *            the number of connections
+	 * 
+	 * @return this very {@link HttpExecutor} instance
 	 */
 	public HttpExecutor maxConnectionsOnHost(String hostName, int port, int numConnections) {
 		HttpRoute route = new HttpRoute(new HttpHost(hostName, port));

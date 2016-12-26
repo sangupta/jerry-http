@@ -45,8 +45,15 @@ public interface HttpResponseHandler {
 	 * Processes an {@link HttpResponse} and returns some value corresponding to
 	 * that response.
 	 * 
+	 * @param originalURI
+	 *            The original {@link URI} instance to which the request was
+	 *            made
+	 * 
 	 * @param response
-	 *            The response to process
+	 *            the {@link HttpResponse} object to process
+	 * 
+	 * @param httpContext
+	 *            the {@link HttpContext} that was used
 	 * 
 	 * @return A value determined by the response
 	 * 

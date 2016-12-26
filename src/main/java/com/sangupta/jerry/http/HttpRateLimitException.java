@@ -37,8 +37,10 @@ public class HttpRateLimitException extends RuntimeException {
 	private static final long serialVersionUID = -8455577300423526727L;
 
 	/**
+	 * Convenience constructor
 	 * 
 	 * @param message
+	 *            the error message to use
 	 */
 	public HttpRateLimitException(String message) {
 		super(message);

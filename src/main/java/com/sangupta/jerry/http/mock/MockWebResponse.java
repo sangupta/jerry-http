@@ -49,7 +49,7 @@ public class MockWebResponse extends WebResponse {
 	/**
 	 * Constructor
 	 * 
-	 * @param responseBody
+	 * @param responseBody the {@link String} response body to use
 	 */
 	public MockWebResponse(String responseBody) {
 		super(null, responseBody);
@@ -68,7 +68,9 @@ public class MockWebResponse extends WebResponse {
 	 * Set the response code to return
 	 * 
 	 * @param responseCode
-	 * @return
+	 *            the response code to use
+	 * 
+	 * @return this very {@link MockWebResponse} instance
 	 */
 	public MockWebResponse setResponseCode(int responseCode) {
 		this.responseCode = responseCode;
@@ -79,7 +81,9 @@ public class MockWebResponse extends WebResponse {
 	 * Set the {@link Charset} to return
 	 * 
 	 * @param charSet
-	 * @return
+	 *            the {@link Charset} to use
+	 * 
+	 * @return this very {@link MockWebResponse} instance
 	 */
 	public MockWebResponse setCharset(Charset charSet) {
 		this.charSet = charSet;
@@ -95,7 +99,9 @@ public class MockWebResponse extends WebResponse {
 	 * Set the content type to return
 	 * 
 	 * @param contentType
-	 * @return
+	 *            the content type to use
+	 * 
+	 * @return this very {@link MockWebResponse} instance
 	 */
 	public MockWebResponse setContentType(String contentType) {
 		this.contentType = contentType;
@@ -103,12 +109,16 @@ public class MockWebResponse extends WebResponse {
 	}
 
 	/**
-	 * Add a new response header. Any previous header with the same value
-	 * will be over-written.
+	 * Add a new response header. Any previous header with the same value will
+	 * be over-written.
 	 * 
 	 * @param name
+	 *            the header name
+	 * 
 	 * @param value
-	 * @return
+	 *            the header value
+	 * 
+	 * @return this very {@link MockWebResponse} instance
 	 */
 	public MockWebResponse addHeader(String name, String value) {
 		this.headers.put(name, value);
@@ -116,10 +126,12 @@ public class MockWebResponse extends WebResponse {
 	}
 	
 	/**
-	 * Set the repsonse message received from server.
+	 * Set the response message received from server.
 	 * 
 	 * @param message
-	 * @return
+	 *            the message to use
+	 * 
+	 * @return this very {@link MockWebResponse} instance
 	 */
 	public MockWebResponse setMessage(String message) {
 		this.message = message;

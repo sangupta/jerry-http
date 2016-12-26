@@ -24,7 +24,7 @@ package com.sangupta.jerry.http;
 import java.io.IOException;
 
 /**
- * Contract for an interceptor that can be added to the {@link WebInvoker} utility
+ * Contract for an interceptor that can be added to the {@link HttpExecutor} utility
  * classes to add hooks before and after invocation.
  * 
  * @author sangupta
@@ -36,7 +36,7 @@ public interface HttpInvocationInterceptor {
 	 * Return the priority of the interceptor. The higher the priority the
 	 * earlier it is executed in the interception chain.
 	 * 
-	 * @return
+	 * @return the priority of this interceptor
 	 */
 	public int getPriority();
 
@@ -57,8 +57,8 @@ public interface HttpInvocationInterceptor {
 	public WebResponse beforeInvocation(WebRequest request);
 	
 	/**
-	 * Intercepting method that is invoked after each request of
-	 * {@link WebInvoker} thus providing a way to add hooks to update the
+	 * Intercepting method that is invoked after each request is processed via
+	 * {@link HttpExecutor} thus providing a way to add hooks to update the
 	 * response received from the server.
 	 * 
 	 * This may be needed in scenarios like mock testing.

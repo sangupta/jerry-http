@@ -133,22 +133,24 @@ public class WebResponse implements Serializable {
 	}
 
     /**
-     * Read the response stream as a {@link String} object considering
-     * UTF-8 encoding.
-     * 
-     * @return
-     */
+	 * Read the response stream as a {@link String} object considering UTF-8
+	 * encoding.
+	 * 
+	 * @return the contents as UTF-8 {@link String}
+	 */
     public String getContent() {
     	return asString(Consts.UTF_8);
     }
     
     /**
-     * Read the response stream as a {@link String} object considering
-     * the given {@link Charset} encoding
-     * 
-     * @param charset
-     * @return
-     */
+	 * Read the response stream as a {@link String} object considering the given
+	 * {@link Charset} encoding
+	 * 
+	 * @param charset
+	 *            the {@link Charset} to use
+	 * 
+	 * @return the contents in given charset
+	 */
     public String asContent(Charset charset) {
     	return asString(charset);
     }
@@ -432,7 +434,8 @@ public class WebResponse implements Serializable {
 	/**
 	 * Indicates if the response was fetched from a redirected resource.
 	 * 
-	 * @return
+	 * @return <code>true</code> if request redirects, <code>false</code>
+	 *         otherwise
 	 */
 	public boolean hasRedirects() {
 		if(this.redirectChain == null) {
@@ -446,7 +449,7 @@ public class WebResponse implements Serializable {
 	 * Returns the actual URI that generated the response. In case of redirects
 	 * this is the last redirected request, that eventually led to response.
 	 * 
-	 * @return the URI used for this response
+	 * @return the {@link URI} used for this response
 	 */
 	public URI getURI() {
 		URI redirected = this.getFinalURI();
@@ -458,9 +461,10 @@ public class WebResponse implements Serializable {
 	}
 	
 	/**
-	 * Returns the final URL that was used to hit a resource.
+	 * Returns the final {@link URI} that was used to hit a resource.
 	 * 
-	 * @return
+	 * @return the final {@link URI} that was used for a redirected request,
+	 *         <code>null</code> if no redirects happened
 	 */
 	public URI getFinalURI() {
 		if(!this.hasRedirects()) {
