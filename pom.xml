@@ -27,9 +27,9 @@
 	</licenses>
 	
 	<scm>
-		<connection>scm:git:git://github.com/sangupta/jerry-http.git</connection>
-		<developerConnection>scm:git:http://git@github.com/sangupta/jerry-http.git</developerConnection>
-		<url>https://github.com/sangupta/jerry-http</url>
+	    <connection>scm:git:ssh://git@github.com/sangupta/jerry-http.git</connection>
+	    <developerConnection>scm:git:ssh://git@github.com/sangupta/jerry-http.git</developerConnection>
+	    <url>https://github.com/sangupta/jerry-http</url>
 	</scm>
 	
 	<developers>
