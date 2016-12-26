@@ -38,4 +38,6 @@ target/*
 */.gitignore
 .settings/*
 /target
-com/sangupta/jerry/*
+release.properties
+pom.xml.releaseBackup
+
