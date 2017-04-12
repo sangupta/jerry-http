@@ -1,7 +1,7 @@
 /**
  *
  * jerry-http - Common Java Functionality
- * Copyright (c) 2012-2016, Sandeep Gupta
+ * Copyright (c) 2012-2017, Sandeep Gupta
  * 
  * http://sangupta.com/projects/jerry-http
  * 
