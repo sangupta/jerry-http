@@ -13,6 +13,13 @@ wrapper functionality to work with HTTP requests using the Apache HTTP client li
 
 For more information on the project, refer to the uber https://github.com/sangupta/jerry project.
 
+The library is tested on the following JDK versions:
+
+* Oracle JDK 9
+* Oracle JDK 8
+* Oracle JDK 7
+* Open JDK 7
+
 ## Features
 
 * Make web requests without all the boiler plate code of the Apache HTTP Client Library
