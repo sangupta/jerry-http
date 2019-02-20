@@ -80,13 +80,13 @@ The library can be downloaded from Maven Central using:
 <dependency>
     <groupId>com.sangupta</groupId>
     <artifactId>jerry-http</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
 ## Release Notes
 
-**2.0.0 (in development)**
+**2.0.0 (26 Dec 2016)**
 
 * Better API structuring
 * Align for loose coupling and easy unit-testing
