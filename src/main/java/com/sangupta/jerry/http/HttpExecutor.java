@@ -234,7 +234,7 @@ public class HttpExecutor {
 	 *             if the number of connections is less than <code>ZERO</code>
 	 */
 	public static void setMaxConnectionsOnHost(HttpRoute route, int numConnections) {
-		if(numConnections < 0) {
+		if(numConnections <= 0) {
 			throw new IllegalArgumentException("Number of connections cannot be less than 1");
 		}
 		
